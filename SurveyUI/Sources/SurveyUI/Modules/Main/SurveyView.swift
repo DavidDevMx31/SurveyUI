@@ -10,8 +10,8 @@ import SwiftUI
 struct SurveyView: View {
     @StateObject private var store: SurveyStore
     
-    public init(store: SurveyStore) {
-        self._store = StateObject(wrappedValue: SurveyStore())
+    public init(survey: Survey) {
+        self._store = StateObject(wrappedValue: SurveyStore(survey: survey))
     }
     
     var body: some View {
@@ -20,5 +20,5 @@ struct SurveyView: View {
 }
 
 #Preview {
-    SurveyView(store: SurveyStore())
+    SurveyView(survey: Survey.getSurveyExample())
 }
