@@ -55,6 +55,22 @@ extension SurveyStore: SingleSelectionVMProtocol {
     }
     
     func addComment(_ comment: String) {
+        guard let allowsTextOption = currentQuestion.allowTextOption else {
+            return
+        }
         
+        let userComment = limitComment(comment)
+        guard !userComment.isEmpty else {
+            fatalError()
+        }
+
+        var newResponse = QuestionResult(questionId: currentQuestion.id)
+        if let selectedOptions = currentResponse.selectedOptionsId {
+            if selectedOptions.contains(allowsTextOption.id) {
+                newResponse.setResponse(selectedOptionsId: selectedOptions, comments: userComment)
+                responses[currentQuestion.id] = newResponse
+                currentResponse = newResponse
+            }
+        }
     }
 }
