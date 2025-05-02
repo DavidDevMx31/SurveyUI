@@ -34,6 +34,7 @@ final class SurveyStore: ObservableObject {
         if currentQuestionIndex > 0 {
             currentQuestionIndex -= 1
         }
+        currentResponse = responses[currentQuestion.id] ?? QuestionResult(questionId: currentQuestion.id)
     }
     
     func nextQuestion() {
