@@ -41,6 +41,10 @@ final class SurveyStore: ObservableObject {
             return
         }
     }
+    
+    private func limitComment(_ comment: String, maxChars: Int = 100) -> String {
+        String(comment.trimmingCharacters(in: .whitespacesAndNewlines).prefix(100))
+    }
 }
 
 extension SurveyStore: SingleSelectionVMProtocol {
@@ -51,5 +55,6 @@ extension SurveyStore: SingleSelectionVMProtocol {
     }
     
     func addComment(_ comment: String) {
+        
     }
 }
