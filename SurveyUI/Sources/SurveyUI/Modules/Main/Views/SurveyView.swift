@@ -17,6 +17,10 @@ struct SurveyView: View {
     var body: some View {
         SurveyHeaderView(currentQuestion: store.currentQuestionIndex + 1, totalQuestions: store.survey.questions.count)
             .animation(.linear, value: store.currentQuestionIndex)
+        
+        if store.currentQuestionIndex == 0 {
+            SurveyIntroView(introText: store.survey.intro)
+        }
     }
 }
 
