@@ -11,6 +11,7 @@ final class SurveyStore: ObservableObject {
     //MARK: Published properties
     @Published var currentQuestionIndex: Int = 0
     @Published var surveyCompleted = false
+    @Published var currentResponse = QuestionResult(questionId: "")
     
     //MARK: Properties
     let survey: Survey
@@ -39,5 +40,16 @@ final class SurveyStore: ObservableObject {
             surveyCompleted = true
             return
         }
+    }
+}
+
+extension SurveyStore: SingleSelectionVMProtocol {
+    func selectOption(_ id: String) {
+        let newResponse = QuestionResult(questionId: currentQuestion.id, selectedId: id)
+        responses[currentQuestion.id] = newResponse
+        currentResponse = newResponse
+    }
+    
+    func addComment(_ comment: String) {
     }
 }
