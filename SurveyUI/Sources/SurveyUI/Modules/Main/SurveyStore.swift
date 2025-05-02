@@ -47,6 +47,20 @@ final class SurveyStore: ObservableObject {
     private func limitComment(_ comment: String, maxChars: Int = 100) -> String {
         String(comment.trimmingCharacters(in: .whitespacesAndNewlines).prefix(100))
     }
+    
+    private func validateCurrentResponse() -> SurveyError? {
+        guard let selectedOptions = currentResponse.selectedOptionsId,
+              !selectedOptions.isEmpty else { return SurveyError.noSelection }
+        
+        if let textOption = currentQuestion.allowTextOption {
+            if selectedOptions.contains(textOption.id) {
+                guard let comments = currentResponse.comments,
+                      !comments.isEmpty else { return SurveyError.textIsEmpty }
+            }
+        }
+        
+        return nil
+    }
 }
 
 extension SurveyStore: SingleSelectionVMProtocol {
