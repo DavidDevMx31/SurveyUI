@@ -15,7 +15,8 @@ struct SurveyView: View {
     }
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        SurveyHeaderView(currentQuestion: store.currentQuestionIndex + 1, totalQuestions: store.survey.questions.count)
+            .animation(.linear, value: store.currentQuestionIndex)
     }
 }
 
