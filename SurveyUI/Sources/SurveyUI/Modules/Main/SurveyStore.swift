@@ -38,10 +38,19 @@ final class SurveyStore: ObservableObject {
     }
     
     func nextQuestion() {
+        if let error = validateCurrentResponse() {
+            errorDetails = error
+            return
+        }
+        
         guard currentQuestionIndex < survey.questions.count - 1 else {
             surveyCompleted = true
             return
         }
+        
+        errorDetails = nil
+        currentQuestionIndex += 1
+        currentResponse = responses[currentQuestion.id] ?? QuestionResult(questionId: currentQuestion.id)
     }
     
     private func limitComment(_ comment: String, maxChars: Int = 100) -> String {
