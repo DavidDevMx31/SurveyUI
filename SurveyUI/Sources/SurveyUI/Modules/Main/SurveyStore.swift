@@ -12,6 +12,7 @@ final class SurveyStore: ObservableObject {
     @Published var currentQuestionIndex: Int = 0
     @Published var surveyCompleted = false
     @Published var currentResponse = QuestionResult(questionId: "")
+    @Published private(set) var errorDetails: SurveyError?
     
     //MARK: Properties
     let survey: Survey
@@ -61,7 +62,8 @@ extension SurveyStore: SingleSelectionVMProtocol {
         
         let userComment = limitComment(comment)
         guard !userComment.isEmpty else {
-            fatalError()
+            errorDetails = SurveyError.textIsEmpty
+            return
         }
 
         var newResponse = QuestionResult(questionId: currentQuestion.id)
