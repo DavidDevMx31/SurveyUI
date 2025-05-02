@@ -20,16 +20,13 @@ struct SurveyQuestionView: View {
                 .padding(.horizontal, 8)
                 .animation(.linear, value: store.currentQuestionIndex)
             
-            /*
-            switch viewModel.currentQuestion.type {
+            switch store.currentQuestion.type {
             case .singleSelection(options: _):
-                SingleSelectionQuestionView(viewModel: viewModel)
-            case .multipleSelection(options: _):
-                MultipleSelectionQuestionView(viewModel: viewModel)
-            case .open(placeholder: let placeholder):
-                OpenQuestionView(placeholder: placeholder, viewModel: viewModel)
+                SingleSelectionQuestionView(store: store)
+            case .multipleSelection(options: _),
+                    .open(placeholder: _):
+                EmptyView()
             }
-        */
         }
         .animation(.default, value: store.currentQuestionIndex)
     }
