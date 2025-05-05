@@ -22,7 +22,7 @@ struct SurveyQuestionView: View {
             
             switch store.currentQuestion.type {
             case .singleSelection(options: _):
-                SingleSelectionQuestionView(store: store)
+                MultipleOptionQuestionView(store: store)
             case .multipleSelection(options: _),
                     .open(placeholder: _):
                 EmptyView()
