@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class SurveyStore: ObservableObject {
+final class SurveyStore {
     //MARK: Published properties
     @Published var currentQuestionIndex: Int = 0
     @Published var surveyCompleted = false
@@ -19,7 +19,15 @@ final class SurveyStore: ObservableObject {
     var currentQuestion: Question {
         survey.questions[currentQuestionIndex]
     }
-    var responses: [String:QuestionResult] = [:]
+    var selectionStrategy: MultipleOptionQuestionStrategy? {
+        switch currentQuestion.type {
+        case .singleSelection(_), .multipleSelection(_):
+            return SingleSelectionStrategy(currentQuestion: currentQuestion)
+        case .open(_):
+            return nil
+        }
+    }
+    private(set) var responses: [String:QuestionResult] = [:]
     
     //MARK: Initializer
     init(survey: Survey) {
@@ -72,31 +80,23 @@ final class SurveyStore: ObservableObject {
     }
 }
 
-extension SurveyStore: SingleSelectionVMProtocol {
+extension SurveyStore: MultipleOptionQuestionProtocol {
     func selectOption(_ id: String) {
-        let newResponse = QuestionResult(questionId: currentQuestion.id, selectedId: id)
+        guard let strategy = selectionStrategy else { return }
+        let newResponse = strategy.selectOption(withId: id)
         responses[currentQuestion.id] = newResponse
         currentResponse = newResponse
     }
     
     func addComment(_ comment: String) {
-        guard let allowsTextOption = currentQuestion.allowTextOption else {
-            return
-        }
-        
-        let userComment = limitComment(comment)
-        guard !userComment.isEmpty else {
-            errorDetails = SurveyError.textIsEmpty
-            return
-        }
-
-        var newResponse = QuestionResult(questionId: currentQuestion.id)
-        if let selectedOptions = currentResponse.selectedOptionsId {
-            if selectedOptions.contains(allowsTextOption.id) {
-                newResponse.setResponse(selectedOptionsId: selectedOptions, comments: userComment)
-                responses[currentQuestion.id] = newResponse
-                currentResponse = newResponse
-            }
+        guard let strategy = selectionStrategy else { return }
+        let addCommentResult = strategy.addComment(comment, withOptionIds: currentResponse.selectedOptionsId)
+        switch addCommentResult {
+        case .success(let newResponse):
+            responses[currentQuestion.id] = newResponse
+            currentResponse = newResponse
+        case .failure(let failure):
+            errorDetails = failure
         }
     }
 }
