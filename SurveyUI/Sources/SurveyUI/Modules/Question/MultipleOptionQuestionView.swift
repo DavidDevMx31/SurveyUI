@@ -55,6 +55,15 @@ struct MultipleOptionQuestionView<T: MultipleOptionQuestionProtocol>: View {
             .scaleEffect(selectedOptions.contains(option.id) ? 0.95 : 0.9)
         }
         
+        if showTextField {
+            CommentTextField(placeholderText: "Comparte tus comentarios",
+                             commentText: $comments) {
+                isInputActive = false
+                store.addComment(comments)
+                comments = store.currentResponse.comments ?? ""
+            }
+            .transition(.opacity)
+        }
     }
 }
 
