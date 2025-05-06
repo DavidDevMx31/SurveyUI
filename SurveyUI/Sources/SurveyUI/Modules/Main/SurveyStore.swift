@@ -90,7 +90,7 @@ extension SurveyStore: MultipleOptionQuestionProtocol {
     
     func addComment(_ comment: String) {
         guard let strategy = selectionStrategy else { return }
-        let addCommentResult = strategy.addComment(comment, withOptionIds: currentResponse.selectedOptionsId)
+        let addCommentResult = strategy.appendComment(comment, withOptionIds: currentResponse.selectedOptionsId)
         switch addCommentResult {
         case .success(let newResponse):
             responses[currentQuestion.id] = newResponse

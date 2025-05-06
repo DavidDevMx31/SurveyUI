@@ -19,7 +19,7 @@ extension MultipleOptionQuestionStrategy {
         String(comment.trimmingCharacters(in: .whitespacesAndNewlines).prefix(100))
     }
     
-    func addComment(_ comment: String, withOptionIds selectedIds: [String]?) -> Result<QuestionResult, SurveyError> {
+    func appendComment(_ comment: String, withOptionIds selectedIds: [String]?) -> Result<QuestionResult, SurveyError> {
         guard let allowsTextOption = currentQuestion.allowTextOption else {
             return .failure(SurveyError.textIsEmpty)
         }
