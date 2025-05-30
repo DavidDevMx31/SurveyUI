@@ -10,7 +10,7 @@ import Foundation
 //MARK: MultipleOptionQuestionStrategy declaration
 protocol MultipleOptionQuestionStrategy {
     var currentQuestion: Question { get }
-    func selectOption(withId id: String) -> QuestionResult
+    func selectId(_ id: String, currentResult: QuestionResult) -> QuestionResult
 }
 
 extension MultipleOptionQuestionStrategy {
@@ -49,9 +49,8 @@ struct SingleSelectionStrategy: MultipleOptionQuestionStrategy {
         self.currentQuestion = currentQuestion
     }
     
-    func selectOption(withId id: String) -> QuestionResult {
+    func selectId(_ id: String, currentResult: QuestionResult) -> QuestionResult {
         return QuestionResult(questionId: currentQuestion.id, selectedId: id)
     }
     
 }
-

@@ -83,7 +83,7 @@ final class SurveyStore {
 extension SurveyStore: MultipleOptionQuestionProtocol {
     func selectOption(_ id: String) {
         guard let strategy = selectionStrategy else { return }
-        let newResponse = strategy.selectOption(withId: id)
+        let newResponse = strategy.selectId(id , currentResult: currentResponse)
         responses[currentQuestion.id] = newResponse
         currentResponse = newResponse
     }
