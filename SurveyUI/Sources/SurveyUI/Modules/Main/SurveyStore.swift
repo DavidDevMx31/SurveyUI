@@ -21,8 +21,10 @@ final class SurveyStore {
     }
     var selectionStrategy: MultipleOptionQuestionStrategy? {
         switch currentQuestion.type {
-        case .singleSelection(_), .multipleSelection(_):
+        case .singleSelection(_):
             return SingleSelectionStrategy(currentQuestion: currentQuestion)
+        case .multipleSelection(_):
+            return MultipleSelectionStrategy(currentQuestion: currentQuestion)
         case .open(_):
             return nil
         }
