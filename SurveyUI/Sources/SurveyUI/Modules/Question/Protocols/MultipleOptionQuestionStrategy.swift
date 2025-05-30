@@ -21,7 +21,8 @@ extension MultipleOptionQuestionStrategy {
     
     func appendComment(_ comment: String, withOptionIds selectedIds: [String]?) -> Result<QuestionResult, SurveyError> {
         guard let allowsTextOption = currentQuestion.allowTextOption else {
-            return .failure(SurveyError.textIsEmpty)
+            //Opcion no permite agregar texto
+            return .failure(SurveyError.noCommentsAllowed)
         }
         
         let userComment = limitComment(comment)
