@@ -35,13 +35,6 @@ struct MultipleOptionQuestionView<T: MultipleOptionQuestionProtocol>: View {
         return false
     }
     
-    private var disableTextField: Bool {
-        if let allowsTextId = allowsTextOptionId {
-            return !selectedOptions.contains(allowsTextId)
-        }
-        return true
-    }
-    
     var body: some View {
         ForEach(store.currentQuestion.options) { option in
             QuestionOptionButton(title: option.description,
