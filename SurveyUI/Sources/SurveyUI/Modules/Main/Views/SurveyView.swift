@@ -28,6 +28,8 @@ struct SurveyView: View {
             }, message: { error in
                 Text(error.recoverySuggestion ?? "")
             })
+        
+        SurveyFooterView(store: store)
     }
 }
 
