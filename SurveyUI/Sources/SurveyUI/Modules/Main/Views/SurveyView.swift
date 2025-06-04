@@ -42,6 +42,18 @@ struct SurveyView: View {
                 SurveyFooterView(store: store)
             }
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .foregroundColor(SurveyUIThemeManager.shared.foregroundColor)
+        .background {
+            if SurveyUIThemeManager.shared.backgroundColor == nil {
+                Color("Background")
+                    .edgesIgnoringSafeArea(.all)
+            } else {
+                SurveyUIThemeManager.shared.backgroundColor
+                    .edgesIgnoringSafeArea(.all)
+            }
+        }
         
     }
 }
