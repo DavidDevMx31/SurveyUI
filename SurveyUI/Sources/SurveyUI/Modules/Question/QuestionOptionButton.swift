@@ -19,7 +19,8 @@ struct QuestionOptionButton: View {
         self.action = action
         self.iconName = isSelected ? "checkmark.circle" : "circle"
         self.opacity = isSelected ? 1.0 : 0.2
-        self.foregroundColor = isSelected ? .white : .gray
+        self.foregroundColor = isSelected ? SurveyUIThemeManager.shared.selectedOptionForegroundColor
+        : SurveyUIThemeManager.shared.unselectedOptionForegroundColor
     }
     
     var body: some View {
@@ -37,15 +38,15 @@ struct QuestionOptionButton: View {
                     .multilineTextAlignment(.leading)
                     .minimumScaleFactor(0.7)
             }
-            .font(.body)
+            .font(SurveyUIThemeManager.shared.bodyFont)
             .foregroundColor(foregroundColor)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(.blue.opacity(opacity),
+                    .stroke(SurveyUIThemeManager.shared.optionBackgroundColor.opacity(opacity),
                             lineWidth: 2.0)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(.blue.opacity(opacity))
+                            .fill(SurveyUIThemeManager.shared.optionBackgroundColor.opacity(opacity))
                     )
             )
             

@@ -31,7 +31,7 @@ struct CommentTextField: View {
                 .frame(minHeight: 40)
                 .padding(.horizontal, 8)
                 .textFieldStyle(OutlinedTextFieldStyle())
-                .font(.body)
+                .font(SurveyUIThemeManager.shared.bodyFont)
                 .onReceive(Just(commentText)) { _ in limitText(maxChars) }
                 .onSubmit {
                     onSubmitHandler()

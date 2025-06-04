@@ -15,7 +15,7 @@ struct SurveyQuestionView: View {
             Text(store.currentQuestion.prompt)
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
-                .font(.body)
+                .font(SurveyUIThemeManager.shared.questionFont)
                 .padding(.vertical, 24)
                 .padding(.horizontal, 8)
                 .animation(.linear, value: store.currentQuestionIndex)

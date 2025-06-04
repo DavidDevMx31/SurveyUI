@@ -19,7 +19,7 @@ struct SurveyCompletedView: View {
     var body: some View {
         Group {
             Text(acknowledgments)
-                .font(.body)
+                .font(SurveyUIThemeManager.shared.surveyIntroFont)
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)
                 .transition(.slide)
