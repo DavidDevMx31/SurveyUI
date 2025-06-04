@@ -15,21 +15,28 @@ struct SurveyView: View {
     }
     
     var body: some View {
-        SurveyHeaderView(currentQuestion: store.currentQuestionIndex + 1, totalQuestions: store.survey.questions.count)
-            .animation(.linear, value: store.currentQuestionIndex)
-        
-        if store.currentQuestionIndex == 0 {
-            SurveyIntroView(introText: store.survey.intro)
+        VStack(alignment: .center, spacing: 24) {
+            if store.surveyCompleted {
+                EmptyView()
+            } else {
+                SurveyHeaderView(currentQuestion: store.currentQuestionIndex + 1, totalQuestions: store.survey.questions.count)
+                    .animation(.linear, value: store.currentQuestionIndex)
+                
+                if store.currentQuestionIndex == 0 {
+                    SurveyIntroView(introText: store.survey.intro)
+                }
+                
+                SurveyQuestionView(store: store)
+                    .alert(isPresented: store.foundError, error: store.errorDetails, actions: { _ in
+                        Text("Ok")
+                    }, message: { error in
+                        Text(error.recoverySuggestion ?? "")
+                    })
+                
+                SurveyFooterView(store: store)
+            }
         }
         
-        SurveyQuestionView(store: store)
-            .alert(isPresented: store.foundError, error: store.errorDetails, actions: { _ in
-                Text("Ok")
-            }, message: { error in
-                Text(error.recoverySuggestion ?? "")
-            })
-        
-        SurveyFooterView(store: store)
     }
 }
 
