@@ -21,7 +21,7 @@ public protocol SurveyUITheme {
     var selectedOptionForegroundColor: Color { get }
 }
 
-public class SurveyThemeManager {
+public class SurveyUIThemeManager {
     @MainActor public static let shared: SurveyUITheme = DefaultSurveyUITheme()
 }
 
