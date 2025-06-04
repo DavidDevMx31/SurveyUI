@@ -5,9 +5,9 @@
 //  Created by David Mendoza on 01/05/25.
 //
 
-import Foundation
+import SwiftUI
 
-final class SurveyStore {
+class SurveyStore: ObservableObject {
     //MARK: Published properties
     @Published var currentQuestionIndex: Int = 0
     @Published var surveyCompleted = false
@@ -30,6 +30,15 @@ final class SurveyStore {
         }
     }
     private(set) var responses: [String:QuestionResult] = [:]
+    @MainActor //Test this approach
+    var foundError: Binding<Bool> {
+        return Binding<Bool>(
+            get: { return self.errorDetails != nil},
+            set: { newValue in guard !newValue else { return }
+                self.errorDetails = nil
+            }
+        )
+    }
     
     //MARK: Initializer
     init(survey: Survey) {
