@@ -9,15 +9,21 @@ import SwiftUI
 
 struct SurveyView: View {
     @StateObject private var store: SurveyStore
+    private var onCompletedSurvey: (SurveyResult) -> Void
     
-    public init(survey: Survey) {
+    public init(survey: Survey,
+                onCompleted: @escaping (SurveyResult)->Void) {
         self._store = StateObject(wrappedValue: SurveyStore(survey: survey))
+        self.onCompletedSurvey = onCompleted
     }
     
     var body: some View {
         VStack(alignment: .center, spacing: 24) {
             if store.surveyCompleted {
-                EmptyView()
+                SurveyCompletedView(acknowledgments: store.survey.acknowledgments) {
+                    let results = store.getSurveyResults()
+                    onCompletedSurvey(results)
+                }
             } else {
                 SurveyHeaderView(currentQuestion: store.currentQuestionIndex + 1, totalQuestions: store.survey.questions.count)
                     .animation(.linear, value: store.currentQuestionIndex)
@@ -41,5 +47,7 @@ struct SurveyView: View {
 }
 
 #Preview {
-    SurveyView(survey: Survey.getSurveyExample())
+    SurveyView(survey: Survey.getSurveyExample()) { _ in
+        debugPrint("Survey completed")
+    }
 }
