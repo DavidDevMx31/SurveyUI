@@ -21,6 +21,13 @@ struct SurveyView: View {
         if store.currentQuestionIndex == 0 {
             SurveyIntroView(introText: store.survey.intro)
         }
+        
+        SurveyQuestionView(store: store)
+            .alert(isPresented: store.foundError, error: store.errorDetails, actions: { _ in
+                Text("Ok")
+            }, message: { error in
+                Text(error.recoverySuggestion ?? "")
+            })
     }
 }
 
