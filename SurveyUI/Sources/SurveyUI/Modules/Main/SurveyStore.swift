@@ -89,6 +89,10 @@ class SurveyStore: ObservableObject {
         
         return nil
     }
+    
+    func getSurveyResults() -> SurveyResult {
+        SurveyResult(surveyId: survey.id, answers: Array(responses.values))
+    }
 }
 
 extension SurveyStore: MultipleOptionQuestionProtocol {
