@@ -28,7 +28,7 @@ public struct Survey: Identifiable {
         self.acknowledgments = acknowledgments
     }
     
-    static func getSurveyExample() -> Survey {
+    public static func getSurveyExample() -> Survey {
         let questionOneOptions = [
             QuestionOption(id: "1", description: "Opción 1"),
             QuestionOption(id: "2", description: "Opción 2"),
@@ -65,6 +65,11 @@ public struct Survey: Identifiable {
         return Survey(id: UUID().uuidString, intro: markdownIntro,
                       questions: questions.compactMap({ $0 }), acknowledgments: acknowledgments)
     }
+    
+    public static func createSurvey(withId surveyId: String, prompt: String,
+                                    questions: [Question], acknowledgments: String) -> Survey {
+        Survey(id: surveyId, intro: prompt, questions: questions, acknowledgments: acknowledgments)
+    }
 }
 
 //MARK: Survey questions
@@ -94,6 +99,11 @@ public struct Question: Identifiable {
     
     var allowTextOption: QuestionOption? {
         options.first(where: { $0.allowsText == true })
+    }
+    
+    public static func createQuestion(withId questionId: String, prompt: String,
+                                      type: QuestionType) -> Question? {
+        Question(id: questionId, prompt: prompt, type: type)
     }
 }
 
