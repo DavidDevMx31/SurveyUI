@@ -41,7 +41,8 @@ struct MultipleOptionQuestionView<T: MultipleOptionQuestionProtocol>: View {
                     isSelected: selectedOptions.contains(option.id)) {
                 withAnimation {
                     store.selectOption(option.id)
-                    if !option.allowsText { comments = "" }
+                    //if !option.allowsText { comments = "" }
+                    comments = store.currentResponse.comments ?? ""
                 }
             }
             .padding(.vertical, 4)
