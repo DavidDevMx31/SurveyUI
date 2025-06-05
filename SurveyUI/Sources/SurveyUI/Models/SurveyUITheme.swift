@@ -22,7 +22,7 @@ public protocol SurveyUITheme {
 }
 
 public class SurveyUIThemeManager {
-    @MainActor public static let shared: SurveyUITheme = DefaultSurveyUITheme()
+    @MainActor public static var shared: SurveyUITheme = DefaultSurveyUITheme()
 }
 
 struct DefaultSurveyUITheme: SurveyUITheme {
