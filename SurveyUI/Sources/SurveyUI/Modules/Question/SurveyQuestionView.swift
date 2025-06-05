@@ -15,16 +15,15 @@ struct SurveyQuestionView: View {
             Text(store.currentQuestion.prompt)
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
-                .font(.body)
+                .font(SurveyUIThemeManager.shared.questionFont)
                 .padding(.vertical, 24)
                 .padding(.horizontal, 8)
                 .animation(.linear, value: store.currentQuestionIndex)
             
             switch store.currentQuestion.type {
-            case .singleSelection(options: _):
-                SingleSelectionQuestionView(store: store)
-            case .multipleSelection(options: _),
-                    .open(placeholder: _):
+            case .singleSelection(options: _), .multipleSelection(options: _):
+                MultipleOptionQuestionView(store: store)
+            case .open(placeholder: _):
                 EmptyView()
             }
         }

@@ -13,7 +13,7 @@ struct SurveyIntroView: View {
     var body: some View {
         Text(introText)
             .layoutPriority(1)
-            .font(.title)
+            .font(SurveyUIThemeManager.shared.surveyIntroFont)
             .lineLimit(nil)
             .multilineTextAlignment(.center)
     }

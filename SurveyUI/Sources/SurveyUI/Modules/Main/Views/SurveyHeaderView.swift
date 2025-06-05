@@ -25,7 +25,7 @@ struct SurveyHeaderView: View {
                 .stroke(.gray, style: StrokeStyle(lineWidth: 2, lineCap: .round))
         }
         .frame(height: 40)
-        .font(.callout)
+        .font(SurveyUIThemeManager.shared.calloutFont)
         .padding(.horizontal)
     }
 

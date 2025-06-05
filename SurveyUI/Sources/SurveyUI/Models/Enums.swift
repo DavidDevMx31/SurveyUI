@@ -46,6 +46,7 @@ extension QuestionError {
 enum SurveyError: LocalizedError {
     case textIsEmpty
     case noSelection
+    case noCommentsAllowed
 }
 
 extension SurveyError {
@@ -55,6 +56,8 @@ extension SurveyError {
             return "El texto de comentarios está vacío"
         case .noSelection:
             return "No has seleccionado ninguna opción"
+        case .noCommentsAllowed:
+            return "La opción no permite agregar comentarios"
         }
     }
     
@@ -64,6 +67,8 @@ extension SurveyError {
             return "El texto de comentarios es requerido"
         case .noSelection:
             return "Seleccionar una opción es requerido"
+        case .noCommentsAllowed:
+            return "Esta opción no permite agregar comentarios"
         }
     }
     
@@ -73,6 +78,8 @@ extension SurveyError {
             return "Agrega tus comentarios"
         case .noSelection:
             return "Selecciona una opción"
+        case .noCommentsAllowed:
+            return "Elimina los comentarios relacionados a esta opción"
         }
     }
 }

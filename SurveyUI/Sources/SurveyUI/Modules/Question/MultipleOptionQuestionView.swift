@@ -7,21 +7,8 @@
 
 import SwiftUI
 
-//MARK: Protocols
-protocol SurveyVMProtocol: ObservableObject {
-    var currentQuestionIndex: Int { get }
-    var currentQuestion: Question { get }
-    var responses: [String:QuestionResult] { get }
-    var currentResponse: QuestionResult { get }
-}
-
-protocol SingleSelectionVMProtocol: SurveyVMProtocol {
-    func selectOption(_ id: String)
-    func addComment(_ comment: String)
-}
-
 //MARK: View
-struct SingleSelectionQuestionView<T: SingleSelectionVMProtocol>: View {
+struct MultipleOptionQuestionView<T: MultipleOptionQuestionProtocol>: View {
     @ObservedObject var store: T
     @State private var comments: String
     @FocusState private var isInputActive: Bool
@@ -48,13 +35,6 @@ struct SingleSelectionQuestionView<T: SingleSelectionVMProtocol>: View {
         return false
     }
     
-    private var disableTextField: Bool {
-        if let allowsTextId = allowsTextOptionId {
-            return !selectedOptions.contains(allowsTextId)
-        }
-        return true
-    }
-    
     var body: some View {
         ForEach(store.currentQuestion.options) { option in
             QuestionOptionButton(title: option.description,
@@ -68,11 +48,20 @@ struct SingleSelectionQuestionView<T: SingleSelectionVMProtocol>: View {
             .scaleEffect(selectedOptions.contains(option.id) ? 0.95 : 0.9)
         }
         
+        if showTextField {
+            CommentTextField(placeholderText: "Comparte tus comentarios",
+                             commentText: $comments) {
+                isInputActive = false
+                store.addComment(comments)
+                comments = store.currentResponse.comments ?? ""
+            }
+            .transition(.opacity)
+        }
     }
 }
 
 /*
 #Preview {
-    SingleSelectionQuestionView(store: )
+    MultipleOptionQuestionView(store: )
 }
 */

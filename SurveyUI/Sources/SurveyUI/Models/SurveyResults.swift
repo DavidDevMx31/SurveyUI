@@ -8,6 +8,16 @@
 import Foundation
 
 //MARK: Question result
+public struct SurveyResult {
+    let surveyId: String
+    var answers: [QuestionResult]
+    
+    init(surveyId: String, answers: [QuestionResult]) {
+        self.surveyId = surveyId
+        self.answers = answers
+    }
+}
+
 public struct QuestionResult {
     let questionId: String
     var selectedOptionsId: [String]?
