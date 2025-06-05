@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SurveyView: View {
+public struct SurveyView: View {
     @StateObject private var store: SurveyStore
     private var onCompletedSurvey: (SurveyResult) -> Void
     
@@ -17,7 +17,7 @@ struct SurveyView: View {
         self.onCompletedSurvey = onCompleted
     }
     
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .center, spacing: 24) {
             if store.surveyCompleted {
                 SurveyCompletedView(acknowledgments: store.survey.acknowledgments) {
