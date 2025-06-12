@@ -9,8 +9,8 @@ import Foundation
 
 //MARK: Question result
 public struct SurveyResult {
-    let surveyId: String
-    var answers: [QuestionResult]
+    public let surveyId: String
+    public var answers: [QuestionResult]
     
     init(surveyId: String, answers: [QuestionResult]) {
         self.surveyId = surveyId
@@ -19,9 +19,9 @@ public struct SurveyResult {
 }
 
 public struct QuestionResult {
-    let questionId: String
-    var selectedOptionsId: [String]?
-    var comments: String?
+    public let questionId: String
+    public var selectedOptionsId: [String]?
+    public var comments: String?
     
     internal init(questionId: String) {
         self.questionId = questionId
