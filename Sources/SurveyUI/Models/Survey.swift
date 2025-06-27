@@ -65,41 +65,17 @@ public struct Survey: Identifiable {
     
     public static func createSurvey(withId surveyId: String, questions: [Question],
                                     introPrompt: String = "", acknowledgments: String = "") -> Survey {
-        guard let attributedIntro = try? AttributedString( markdown: introPrompt,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        ) else {
+        guard let attributedIntro = try? AttributedString(markdown: introPrompt,
+            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)),
+              let markdownAcknowledgments: AttributedString = try? AttributedString(markdown: acknowledgments,
+                  options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
+        else {
             return Survey(id: surveyId, intro: introPrompt, questions: questions, acknowledgments: acknowledgments)
         }
-        
-        guard let markdownAcknowledgments: AttributedString = try? AttributedString(markdown: acknowledgments,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        ) else {
-            return Survey(id: surveyId, intro: introPrompt, questions: questions, acknowledgments: acknowledgments)
-        }
-                
+
         return Survey(id: surveyId, intro: attributedIntro, questions: questions, acknowledgments: markdownAcknowledgments)
     }
     
-    /*
-    public static func createSurvey(withId surveyId: String, questions: [Question],
-                                    markdownIntro: String, markdownAcknowledgments: String) -> Survey {
-        guard !markdownIntro.isEmpty,
-                let attributedIntro = try? AttributedString( markdown: markdownIntro,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        ) else {
-            return Survey(id: surveyId, intro: markdownIntro, questions: questions, acknowledgments: markdownAcknowledgments)
-        }
-        
-        guard !markdownAcknowledgments.isEmpty,
-                let acknowledgments: AttributedString = try? AttributedString(markdown: markdownAcknowledgments,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        ) else {
-            return Survey(id: surveyId, intro: markdownIntro, questions: questions, acknowledgments: markdownAcknowledgments)
-        }
-                
-        return Survey(id: surveyId, intro: attributedIntro, questions: questions, acknowledgments: acknowledgments)
-    }
-     */
 }
 
 //MARK: Survey questions
