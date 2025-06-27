@@ -21,7 +21,7 @@ struct NextQuestionButton: View {
             onTappedCompletion()
         }
         label: {
-            Label("Continuar",
+            Label("Siguiente",
                   systemImage: "arrow.right.circle")
             .foregroundColor(isEnabled ? Color.blue : Color(uiColor: UIColor.systemGray5))
         }

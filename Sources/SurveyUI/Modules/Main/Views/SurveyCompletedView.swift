@@ -27,7 +27,7 @@ struct SurveyCompletedView: View {
             Button {
                 onFinishTapped()
             } label: {
-                Label("Terminar", systemImage: "checkmark.circle")
+                Label("Finalizar encuesta", systemImage: "checkmark.circle")
                     .foregroundColor(Color.blue)
             }
         }

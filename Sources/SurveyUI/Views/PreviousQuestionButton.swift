@@ -19,7 +19,7 @@ struct PreviousQuestionButton: View {
         Button {
             onTappedCompletion()
         } label: {
-            Label("Atrás", systemImage: "arrow.left.circle")
+            Label("Anterior", systemImage: "arrow.left.circle")
                 .foregroundColor(isEnabled ? Color.blue : Color(uiColor: UIColor.systemGray5))
         }
     }
