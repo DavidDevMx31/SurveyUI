@@ -56,6 +56,7 @@ struct MultipleOptionQuestionView<T: MultipleOptionQuestionProtocol>: View {
                 store.addComment(comments)
                 comments = store.currentResponse.comments ?? ""
             }
+            .submitLabel(.done)
             .transition(.opacity)
         }
     }
