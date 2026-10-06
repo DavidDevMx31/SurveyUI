@@ -19,7 +19,7 @@ class SurveyStore: ObservableObject {
     var currentQuestion: Question {
         survey.questions[currentQuestionIndex]
     }
-    var selectionStrategy: MultipleOptionQuestionStrategy? {
+    var selectionStrategy: SurveyQuestionStrategy? {
         switch currentQuestion.type {
         case .singleSelection(_):
             return SingleSelectionStrategy(currentQuestion: currentQuestion)
@@ -44,7 +44,7 @@ class SurveyStore: ObservableObject {
     
     @MainActor
     var currentValidationState: QuestionValidationState {
-        selectionStrategy?.validationState(for: currentResponse) ?? .valid
+        selectionStrategy?.validate(for: currentResponse) ?? .valid
     }
     
     //MARK: Initializer
@@ -115,7 +115,7 @@ class SurveyStore: ObservableObject {
 extension SurveyStore: MultipleOptionQuestionProtocol {
     func selectOption(_ id: String) {
         guard let strategy = selectionStrategy else { return }
-        let newResponse = strategy.selectId(id , currentResult: currentResponse)
+        let newResponse = strategy.selectOption(id , currentResult: currentResponse)
         responses[currentQuestion.id] = newResponse
         currentResponse = newResponse
     }
