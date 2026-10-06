@@ -11,6 +11,7 @@ import Foundation
 protocol MultipleOptionQuestionStrategy {
     var currentQuestion: Question { get }
     func selectId(_ id: String, currentResult: QuestionResult) -> QuestionResult
+    func validationState(for response: QuestionResult) -> QuestionValidationState
 }
 
 extension MultipleOptionQuestionStrategy {
@@ -53,6 +54,10 @@ struct SingleSelectionStrategy: MultipleOptionQuestionStrategy {
         return QuestionResult(questionId: currentQuestion.id, selectedId: id)
     }
     
+    func validationState(for response: QuestionResult) -> QuestionValidationState {
+        guard let selectedOption = response.selectedOptionsId, selectedOption.count != 1 else { return .incomplete }
+        return .valid
+    }
 }
 
 //MARK: Multiple option selection
@@ -94,4 +99,85 @@ struct MultipleSelectionStrategy: MultipleOptionQuestionStrategy {
         return newResult
     }
     
+    func validationState(for response: QuestionResult) -> QuestionValidationState {
+        guard let selectedOption = response.selectedOptionsId, selectedOption.count == 0 else { return .incomplete }
+        if currentQuestion.allowTextOption != nil {
+            if response.comments?.isEmpty == true { return .incomplete }
+        }
+        return .valid
+    }
+}
+
+struct CategorySelectionStrategy: MultipleOptionQuestionStrategy {
+    private(set) var currentQuestion: Question
+    private(set) var maxSelectableItems: Int
+    
+    init (currentQuestion: Question, maxSelectableItems: Int) {
+        self.currentQuestion = currentQuestion
+        self.maxSelectableItems = maxSelectableItems
+    }
+    
+    func selectId(_ id: String, currentResult: QuestionResult) -> QuestionResult {
+        guard var previousSelection = currentResult.selectedOptionsId else {
+            return QuestionResult(questionId: currentQuestion.id, selectedId: id)
+        }
+        
+        //Vemos si esta seleccionada previamente
+        if previousSelection.contains(id) {
+            previousSelection.removeAll(where: {$0 == id })
+        } else {
+            previousSelection.append(id)
+        }
+        var result = QuestionResult(questionId: id)
+        result.setResponse(selectedOptionsId: previousSelection, comments: nil)
+        return result
+    }
+    
+    func validateResponse(_ response: QuestionResult) -> Bool {
+        guard let selectedOptions = response.selectedOptionsId else { return false }
+        if selectedOptions.isEmpty { return false }
+        if selectedOptions.count > maxSelectableItems { return false }
+        return true
+    }
+    
+    func validationState(for response: QuestionResult) -> QuestionValidationState {
+        guard let selectedOptions = response.selectedOptionsId else { return .incomplete }
+        if selectedOptions.isEmpty { return .incomplete }
+        if selectedOptions.count > maxSelectableItems { return .invalid(.selectionLimitExceeded(maximum: maxSelectableItems)) }
+        return .valid
+    }
+}
+
+enum QuestionValidationState {
+    case incomplete
+    case valid
+    case invalid(QuestionValidationError)
+
+    var canAdvance: Bool {
+        switch self {
+        case .valid:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var message: String? {
+        guard case let .invalid(error) = self else {
+            return nil
+        }
+
+        return error.localizedDescription
+    }
+}
+
+enum QuestionValidationError: LocalizedError {
+    case selectionLimitExceeded(maximum: Int)
+
+    var errorDescription: String? {
+        switch self {
+        case let .selectionLimitExceeded(maximum):
+            "Selecciona máximo \(maximum) elementos"
+        }
+    }
 }

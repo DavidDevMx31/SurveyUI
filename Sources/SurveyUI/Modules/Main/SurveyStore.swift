@@ -27,6 +27,8 @@ class SurveyStore: ObservableObject {
             return MultipleSelectionStrategy(currentQuestion: currentQuestion)
         case .open(_):
             return nil
+        case .categorySelection(options: _, maxSelectableItems: let maxSelectableItems):
+            return CategorySelectionStrategy(currentQuestion: currentQuestion, maxSelectableItems: maxSelectableItems)
         }
     }
     private(set) var responses: [String:QuestionResult] = [:]
@@ -38,6 +40,11 @@ class SurveyStore: ObservableObject {
                 self.errorDetails = nil
             }
         )
+    }
+    
+    @MainActor
+    var currentValidationState: QuestionValidationState {
+        selectionStrategy?.validationState(for: currentResponse) ?? .valid
     }
     
     //MARK: Initializer
@@ -56,10 +63,20 @@ class SurveyStore: ObservableObject {
         currentResponse = responses[currentQuestion.id] ?? QuestionResult(questionId: currentQuestion.id)
     }
     
+    @MainActor
     func nextQuestion() {
+        /*
         if let error = validateCurrentResponse() {
             errorDetails = error
             return
+        }
+         */
+        switch currentValidationState {
+        case .incomplete, .invalid(_):
+            debugPrint("Validation: \(currentValidationState.message)")
+            return
+        default:
+            debugPrint("Validation: Ok")
         }
         
         guard currentQuestionIndex < survey.questions.count - 1 else {
