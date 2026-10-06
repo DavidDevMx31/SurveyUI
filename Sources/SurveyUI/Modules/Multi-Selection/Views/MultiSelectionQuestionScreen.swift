@@ -9,11 +9,22 @@ import SwiftUI
 
 //MARK: Screen container
 struct MultiSelectionQuestionScreen: View {
-    let options: [MultiSelectionOption] = Array(repeating: MultiSelectionOption.example, count: 10)
+    @State private var question = MultiSelectionQuestion.example
     
     var body: some View {
-        List(options) { option in
-            rowForOption(option)
+        List {
+            Section {
+                ForEach(question.options) { option in
+                    rowForOption(option)
+                }
+            } footer: {
+                if let error = question.errorMessage {
+                    Text(error.localizedDescription)
+                        .foregroundStyle(.red)
+                        .font(SurveyUIThemeManager.shared.calloutFont)
+                }
+            }
+
         }
     }
     
@@ -23,13 +34,21 @@ struct MultiSelectionQuestionScreen: View {
             Text(option.emoji)
             Text(option.description)
             Spacer()
-            if option.isSelected {
+            if question.selectedOptions.contains(option.id) {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(Color.green)
                     .font(SurveyUIThemeManager.shared.calloutFont)
             }
         }
         .font(SurveyUIThemeManager.shared.bodyFont)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            self.onOptionTap(option)
+        }
+    }
+    
+    private func onOptionTap(_ option: MultiSelectionOption) {
+        question.select(optionId: option.id)
     }
 }
 
@@ -40,12 +59,61 @@ struct MultiSelectionQuestionScreen: View {
 }
 
 //MARK: Model
-struct MultiSelectionOption: Identifiable {
+struct MultiSelectionOption: Identifiable, Equatable {
     let id: String
     let description: String
     let emoji: String
-    let isSelected: Bool
     
-    static let example = MultiSelectionOption(id: UUID().uuidString, description: "Ejemplo", emoji: emojiExamples.randomElement()!, isSelected: true)
+    static func ==(lhs: MultiSelectionOption, rhs: MultiSelectionOption) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    static let example = MultiSelectionOption(id: UUID().uuidString, description: "Ejemplo", emoji: emojiExamples.randomElement()!)
     static let emojiExamples = ["🫰🏻", "👀", "📱", "⏳", "📖"]
+}
+
+struct MultiSelectionQuestion: Identifiable {
+    let id: String
+    let prompt: String
+    var options: [MultiSelectionOption]
+    
+    let maxSelectableItems: Int
+    var selectedOptions: [MultiSelectionOption.ID] = []
+    
+    var errorMessage: MultiSelectionError? {
+        if selectedOptions.count > maxSelectableItems {
+            return .invalidMaxSelectableItems(maxElements: maxSelectableItems)
+        }
+        return nil
+    }
+    
+    static let example = MultiSelectionQuestion(id: UUID().uuidString,
+                    prompt: "Esta es una pregunta de ejemplo con múltiples opciones",
+                    options: [
+                        MultiSelectionOption(id: "1", description: "Ejemplo 1", emoji: "📲"),
+                        MultiSelectionOption(id: "2", description: "Ejemplo 2", emoji: "⏳"),
+                        MultiSelectionOption(id: "3", description: "Ejemplo 3", emoji: "📖")],
+                                                maxSelectableItems: 2)
+    
+    mutating func select(optionId: MultiSelectionOption.ID) {
+        //Valida si existe la opcion
+        guard options.first(where: { $0.id == optionId }) != nil else { return }
+        //Vemos si esta seleccionada previamente
+        if selectedOptions.contains(optionId) {
+            selectedOptions.removeAll(where: {$0 == optionId })
+        } else {
+            selectedOptions.append(optionId)
+        }
+    }
+}
+
+enum MultiSelectionError: Error {
+    case invalidMaxSelectableItems(maxElements: Int)
+
+    var localizedDescription: String {
+        switch self {
+        case .invalidMaxSelectableItems(let maxElements):
+            return "Selecciona hasta \(maxElements) elementos"
+        }
+    }
 }
