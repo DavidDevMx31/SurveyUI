@@ -12,6 +12,7 @@ public enum QuestionType {
     case singleSelection(options: [QuestionOption])
     case multipleSelection(options: [QuestionOption])
     case open(placeholder: String)
+    case categorySelection(options: [CategoryOption], maxSelectableItems: Int)
 }
 
 //MARK: Question errors
