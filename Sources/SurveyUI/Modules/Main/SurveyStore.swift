@@ -21,9 +21,9 @@ class SurveyStore: ObservableObject {
     }
     var selectionStrategy: SurveyQuestionStrategy? {
         switch currentQuestion.type {
-        case .singleSelection(_):
+        case .singleChoice(_):
             return SingleSelectionStrategy(currentQuestion: currentQuestion)
-        case .multipleSelection(_):
+        case .multipleChoice(_):
             return MultipleSelectionStrategy(currentQuestion: currentQuestion)
         case .open(_):
             return nil

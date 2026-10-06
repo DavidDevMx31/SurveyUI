@@ -44,9 +44,9 @@ public struct Survey: Identifiable {
         ]
         
         let questions = [Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
-                                  type: .singleSelection(options: questionOneOptions)),
+                                  type: .singleChoice(options: questionOneOptions)),
                          Question(id: "2", prompt: "Este es el texto de la pregunta 2",
-                                                   type: .singleSelection(options: questionTwoOptions))
+                                                   type: .singleChoice(options: questionTwoOptions))
         ]
         
         let markdownIntro: AttributedString = try! AttributedString(
@@ -91,8 +91,8 @@ public struct Question: Identifiable {
         self.type = type
         
         switch type {
-        case .multipleSelection(let associatedOptions),
-                .singleSelection(options: let associatedOptions):
+        case .multipleChoice(let associatedOptions),
+                .singleChoice(options: let associatedOptions):
             
             let allowsTextOptions = associatedOptions.filter { $0.allowsText == true }
             if allowsTextOptions.count > 1 { return nil }
