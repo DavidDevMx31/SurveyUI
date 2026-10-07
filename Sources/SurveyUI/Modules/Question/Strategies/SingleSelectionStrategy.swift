@@ -21,7 +21,7 @@ struct SingleSelectionStrategy: SurveyQuestionStrategy {
     
     func validate(for response: QuestionResult) -> QuestionValidationState {
         guard let selectedOption = response.selectedOptionsId else { return .incomplete }
-        guard selectedOption.count != 1 else { return .invalid(QuestionValidationError.selectionLimitExceeded(maximum: 1)) }
+        guard selectedOption.count == 1 else { return .invalid(QuestionValidationError.selectionLimitExceeded(maximum: 1)) }
         return .valid
     }
 }
