@@ -26,7 +26,7 @@ struct SurveyQuestionView: View {
             case .open(placeholder: _):
                 EmptyView()
             case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
-                MultiSelectionQuestionScreen(store: store, options: options, maxSelectableItems: maxSelectableItems)
+                CategorySelectionScreen(store: store, options: options, maxSelectableItems: maxSelectableItems)
             }
         }
         .animation(.default, value: store.currentQuestionIndex)
