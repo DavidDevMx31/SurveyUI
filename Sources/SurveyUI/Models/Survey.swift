@@ -13,19 +13,22 @@ public struct Survey: Identifiable {
     var intro: AttributedString
     var acknowledgments: AttributedString
     var questions: [Question]
+    let skippable: Bool
     
-    init(id: String, intro: String, questions: [Question], acknowledgments: String) {
+    init(id: String, intro: String, questions: [Question], acknowledgments: String, skippable: Bool = false) {
         self.id = id
         self.intro = AttributedString(intro)
         self.questions = questions
         self.acknowledgments = AttributedString(acknowledgments)
+        self.skippable = skippable
     }
     
-    init(id: String, intro: AttributedString, questions: [Question], acknowledgments: AttributedString) {
+    init(id: String, intro: AttributedString, questions: [Question], acknowledgments: AttributedString, skippable: Bool = false) {
         self.id = id
         self.intro = intro
         self.questions = questions
         self.acknowledgments = acknowledgments
+        self.skippable = skippable
     }
     
     public static func getSurveyExample() -> Survey {
@@ -64,16 +67,16 @@ public struct Survey: Identifiable {
     }
     
     public static func createSurvey(withId surveyId: String, questions: [Question],
-                                    introPrompt: String = "", acknowledgments: String = "") -> Survey {
+                                    introPrompt: String = "", acknowledgments: String = "", skippable: Bool = false) -> Survey {
         guard let attributedIntro = try? AttributedString(markdown: introPrompt,
             options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)),
               let markdownAcknowledgments: AttributedString = try? AttributedString(markdown: acknowledgments,
                   options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
         else {
-            return Survey(id: surveyId, intro: introPrompt, questions: questions, acknowledgments: acknowledgments)
+            return Survey(id: surveyId, intro: introPrompt, questions: questions, acknowledgments: acknowledgments, skippable: skippable)
         }
 
-        return Survey(id: surveyId, intro: attributedIntro, questions: questions, acknowledgments: markdownAcknowledgments)
+        return Survey(id: surveyId, intro: attributedIntro, questions: questions, acknowledgments: markdownAcknowledgments, skippable: skippable)
     }
     
 }

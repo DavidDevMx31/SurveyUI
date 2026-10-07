@@ -18,7 +18,8 @@ struct SkipSurveyButton: View {
                 .underline()
         }
         .buttonStyle(.plain)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(.primary)
+        .font(.subheadline)
 
     }
 }
