@@ -38,7 +38,7 @@ enum QuestionValidationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .selectionLimitExceeded(maximum):
-            "Selecciona máximo \(maximum) elementos"
+            return "Selecciona máximo \(maximum) elementos"
         }
     }
 }
