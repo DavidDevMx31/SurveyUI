@@ -20,8 +20,11 @@ struct PreviousQuestionButton: View {
             onTappedCompletion()
         } label: {
             Label("Anterior", systemImage: "arrow.left.circle")
-                .foregroundColor(isEnabled ? Color.blue : Color(uiColor: UIColor.systemGray5))
+                .foregroundColor(isEnabled ? Color.white : Color(uiColor: UIColor.systemGray))
         }
+        .tint(Color.secondary)
+        .buttonStyle(.borderedProminent)
+         
     }
 }
 

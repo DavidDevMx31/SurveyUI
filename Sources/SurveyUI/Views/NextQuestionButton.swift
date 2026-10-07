@@ -21,10 +21,12 @@ struct NextQuestionButton: View {
             onTappedCompletion()
         }
         label: {
-            Label("Siguiente",
-                  systemImage: "arrow.right.circle")
-            .foregroundColor(isEnabled ? Color.blue : Color(uiColor: UIColor.systemGray5))
+            Label("Siguiente", systemImage: "arrow.right.circle")
+                .foregroundColor(isEnabled ? Color.white : Color(uiColor: UIColor.systemGray))
         }
+        .tint(Color.blue)
+        .buttonStyle(.borderedProminent)
+        
     }
 }
 
