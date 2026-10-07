@@ -7,12 +7,24 @@
 
 import SwiftUI
 
-struct SwiftUIView: View {
+struct SkipSurveyButton: View {
+    var onSkipTapped: (() -> Void)
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            onSkipTapped()
+        } label: {
+            Text("Ahora no")
+                .underline()
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.secondary)
+
     }
 }
 
 #Preview {
-    SwiftUIView()
+    SkipSurveyButton() {
+        debugPrint("Skip button tapped")
+    }
 }

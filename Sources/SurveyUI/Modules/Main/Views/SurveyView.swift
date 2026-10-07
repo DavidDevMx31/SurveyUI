@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct SurveyView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var store: SurveyStore
     private var onCompletedSurvey: (SurveyResult) -> Void
     
@@ -39,7 +40,9 @@ public struct SurveyView: View {
                         Text(error.recoverySuggestion ?? "")
                     })
                 
-                SurveyFooterView(store: store)
+                SurveyFooterView(store: store) {
+                    dismiss()
+                }
             }
         }
         .padding(.horizontal, 12)

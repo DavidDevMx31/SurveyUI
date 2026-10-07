@@ -14,18 +14,25 @@ struct SurveyFooterView: View {
         !store.currentValidationState.canAdvance
     }
     
+    var onSkipTapped: (() -> Void)?
+    
     var body: some View {
-        HStack(alignment: .center, spacing: 96) {
-            PreviousQuestionButton {
-                store.previousQuestion()
+        VStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .center, spacing: 96) {
+                PreviousQuestionButton {
+                    store.previousQuestion()
+                }
+                .disabled(store.currentQuestionIndex == 0)
+                
+                NextQuestionButton {
+                    store.nextQuestion()
+                }
+                .disabled(disableNextButton)
             }
-            .disabled(store.currentQuestionIndex == 0)
             
-            NextQuestionButton {
-                store.nextQuestion()
+            SkipSurveyButton {
+                onSkipTapped?()
             }
-            .disabled(disableNextButton)
-            
         }
         .padding(.vertical, 16)
     }
