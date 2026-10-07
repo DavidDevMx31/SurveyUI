@@ -11,21 +11,7 @@ struct SurveyFooterView: View {
     @ObservedObject var store: SurveyStore
     
     private var disableNextButton: Bool {
-        guard let selectedOptions = store.currentResponse.selectedOptionsId,
-              !selectedOptions.isEmpty else {
-            return true
-        }
-
-        if let allowsTextOption = store.currentQuestion.allowTextOption {
-            if selectedOptions.contains(allowsTextOption.id) {
-                guard let comment = store.currentResponse.comments,
-                      !comment.isEmpty else {
-                    return true
-                }
-            } //else { return true }
-        }
-        
-        return false
+        !store.currentValidationState.canAdvance
     }
     
     var body: some View {
