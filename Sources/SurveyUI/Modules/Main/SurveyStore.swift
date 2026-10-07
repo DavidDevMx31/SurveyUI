@@ -44,7 +44,7 @@ class SurveyStore: ObservableObject {
     
     @MainActor
     var currentValidationState: QuestionValidationState {
-        selectionStrategy?.validate(for: currentResponse) ?? .valid
+        selectionStrategy?.validate(for: currentResponse) ?? .incomplete
     }
     
     //MARK: Initializer
@@ -65,20 +65,8 @@ class SurveyStore: ObservableObject {
     
     @MainActor
     func nextQuestion() {
-        /*
-        if let error = validateCurrentResponse() {
-            errorDetails = error
-            return
-        }
-         */
-        switch currentValidationState {
-        case .incomplete, .invalid(_):
-            debugPrint("Validation: \(currentValidationState.message)")
-            return
-        default:
-            debugPrint("Validation: Ok")
-        }
-        
+        guard currentValidationState.canAdvance else { return }
+
         guard currentQuestionIndex < survey.questions.count - 1 else {
             surveyCompleted = true
             return
