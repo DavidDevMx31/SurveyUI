@@ -33,23 +33,23 @@ public struct Survey: Identifiable {
     
     public static func getSurveyExample() -> Survey {
         let questionOneOptions = [
-            QuestionOption(id: "1", description: "Opción 1"),
-            QuestionOption(id: "2", description: "Opción 2"),
-            QuestionOption(id: "3", description: "Opción 3"),
-            QuestionOption(id: "4", description: "Opción 4")
+            try! QuestionOption(id: "1", description: "Opción 1"),
+            try! QuestionOption(id: "2", description: "Opción 2"),
+            try! QuestionOption(id: "3", description: "Opción 3"),
+            try! QuestionOption(id: "4", description: "Opción 4")
         ]
         
         let questionTwoOptions = [
-            QuestionOption(id: "5", description: "Opción 5"),
-            QuestionOption(id: "6", description: "Opción 6"),
-            QuestionOption(id: "7", description: "Opción 7"),
-            QuestionOption(id: "8", description: "Otro", allowsText: true)
+            try! QuestionOption(id: "5", description: "Opción 5"),
+            try! QuestionOption(id: "6", description: "Opción 6"),
+            try! QuestionOption(id: "7", description: "Opción 7"),
+            try! QuestionOption(id: "8", description: "Otro", allowsText: true)
         ]
         
         let questions = [Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
                                   type: .singleChoice(options: questionOneOptions)),
                          Question(id: "2", prompt: "Este es el texto de la pregunta 2",
-                                                   type: .singleChoice(options: questionTwoOptions))
+                                  type: .singleChoice(options: questionTwoOptions))
         ]
         
         let markdownIntro: AttributedString = try! AttributedString(
@@ -122,7 +122,9 @@ public struct QuestionOption: Identifiable {
     let description: String
     let allowsText: Bool
     
-    public init(id: String, description: String, allowsText: Bool = false) {
+    public init(id: String, description: String, allowsText: Bool = false) throws {
+        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
+        guard description.validateRequired() else { throw SurveyDefinitionError.emptyOptionDescription }
         self.id = id
         self.description = description
         self.allowsText = allowsText
