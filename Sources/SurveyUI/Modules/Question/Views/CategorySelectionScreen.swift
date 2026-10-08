@@ -61,7 +61,6 @@ struct CategorySelectionScreen: View {
     }
 }
 
-//MARK: Sub views
 /*
 #Preview {
     MultiSelectionQuestionScreen()
