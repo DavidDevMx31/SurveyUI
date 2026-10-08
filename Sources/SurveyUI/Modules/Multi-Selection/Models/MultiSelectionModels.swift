@@ -14,16 +14,9 @@ public struct CategoryOption: Identifiable {
     
     public init(id: String, description: String, emoji: String?) throws {
         guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
-        guard description.validateRequired() else { throw SurveyDefinitionError.emptyOptionDescription }
+        guard description.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         self.id = id
         self.description = description
         self.emoji = emoji
     }
-}
-
-struct MultiSelectionQuestion: Identifiable {
-    let id: String
-    let prompt: String
-    var options: [CategoryOption]
-    let maxSelectableItems: Int
 }

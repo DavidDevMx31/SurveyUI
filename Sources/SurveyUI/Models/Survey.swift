@@ -52,11 +52,11 @@ public struct Survey: Identifiable {
             try! CategoryOption(id: "co-3", description: "Opción 3", emoji: "⚔️"),
         ]
         
-        let questions = [Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
+        let questions = [try! Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
                                   type: .singleChoice(options: questionOneOptions)),
-                         Question(id: "2", prompt: "Este es el texto de la pregunta 2",
+                         try! Question(id: "2", prompt: "Este es el texto de la pregunta 2",
                                   type: .singleChoice(options: questionTwoOptions)),
-                         Question(id: "quest-3", prompt: "Esta es una pregunta con múltiples categorías para elegir", type: .categorySelection(options: categoryQuestionOptions, maxSelectableItems: 2))
+                         try! Question(id: "quest-3", prompt: "Esta es una pregunta con múltiples categorías para elegir", type: .categorySelection(options: categoryQuestionOptions, maxSelectableItems: 2))
         ]
         
         let markdownIntro: AttributedString = try! AttributedString(
@@ -95,31 +95,36 @@ public struct Question: Identifiable {
     let options: [QuestionOption]
     var type: QuestionType
     
-    init?(id: ID, prompt: String, type: QuestionType) {
-        self.id = id
-        self.prompt = prompt
-        self.type = type
+    init?(id: String, prompt: String, type: QuestionType) throws {
+        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
+        guard prompt.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         
         switch type {
         case .multipleChoice(let associatedOptions),
                 .singleChoice(options: let associatedOptions):
             
-            let allowsTextOptions = associatedOptions.filter { $0.allowsText == true }
-            if allowsTextOptions.count > 1 { return nil }
-            
+            guard Question.validateOnlyOneOptionAllowsText(associatedOptions) else { throw SurveyDefinitionError.manyOptionsAllowText }
             self.options = associatedOptions
+        case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
+            if maxSelectableItems > options.count { throw SurveyDefinitionError.invalidMaximumSelection }
+            self.options = []
         default:
             self.options = []
         }
+        
+        self.id = id
+        self.prompt = prompt
+        self.type = type
+    }
+    
+    private static func validateOnlyOneOptionAllowsText(_ options: [QuestionOption]) -> Bool {
+        let allowsTextOptions = options.filter { $0.allowsText == true }
+        if allowsTextOptions.count > 1 { return false }
+        return true
     }
     
     var allowTextOption: QuestionOption? {
         options.first(where: { $0.allowsText == true })
-    }
-    
-    public static func createQuestion(withId questionId: String, prompt: String,
-                                      type: QuestionType) -> Question? {
-        Question(id: questionId, prompt: prompt, type: type)
     }
 }
 
@@ -131,7 +136,7 @@ public struct QuestionOption: Identifiable {
     
     public init(id: String, description: String, allowsText: Bool = false) throws {
         guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
-        guard description.validateRequired() else { throw SurveyDefinitionError.emptyOptionDescription }
+        guard description.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         self.id = id
         self.description = description
         self.allowsText = allowsText

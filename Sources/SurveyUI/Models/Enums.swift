@@ -88,5 +88,7 @@ extension SurveyError {
 //MARK: Survey definition errors
 public enum SurveyDefinitionError: LocalizedError {
     case emptyId
-    case emptyOptionDescription
+    case emptyDescription
+    case manyOptionsAllowText
+    case invalidMaximumSelection
 }
