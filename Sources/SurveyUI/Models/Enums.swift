@@ -91,4 +91,5 @@ public enum SurveyDefinitionError: LocalizedError {
     case emptyDescription
     case manyOptionsAllowText
     case invalidMaximumSelection
+    case nonUniqueIds
 }

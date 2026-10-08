@@ -95,11 +95,11 @@ public struct Question: Identifiable {
                 .singleChoice(options: let associatedOptions):
             
             guard Question.validateOnlyOneOptionAllowsText(associatedOptions) else { throw SurveyDefinitionError.manyOptionsAllowText }
-            guard Question.validateUniqueOptionIds(associatedOptions) else { throw SurveyDefinitionError.invalidMaximumSelection }
+            guard Question.validateUniqueOptionIds(associatedOptions) else { throw SurveyDefinitionError.nonUniqueIds }
             self.options = associatedOptions
         case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
             if maxSelectableItems > options.count { throw SurveyDefinitionError.invalidMaximumSelection }
-            guard Question.validateUniqueCategoryIds(options) else { throw SurveyDefinitionError.invalidMaximumSelection }
+            guard Question.validateUniqueCategoryIds(options) else { throw SurveyDefinitionError.nonUniqueIds }
             self.options = []
         default:
             self.options = []
