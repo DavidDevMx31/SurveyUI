@@ -23,7 +23,7 @@ public struct SurveyView: View {
     public var body: some View {
         VStack(alignment: .center, spacing: 24) {
             if store.surveyCompleted {
-                SurveyCompletedView(acknowledgments: store.survey.acknowledgments) {
+                SurveyCompletedView(content: store.survey.completionContent) {
                     let results = store.getSurveyResults()
                     onCompletedSurvey(results)
                 }

@@ -11,23 +11,23 @@ import Foundation
 public struct Survey: Identifiable {
     public var id: String
     var intro: AttributedString
-    var acknowledgments: AttributedString
     var questions: [Question]
+    var completionContent: SurveyCompletionContent
     let skippable: Bool
     
-    init(id: String, intro: String, questions: [Question], acknowledgments: String, skippable: Bool = false) {
+    init(id: String, intro: String, questions: [Question], completionContent: SurveyCompletionContent, skippable: Bool = false) {
         self.id = id
         self.intro = AttributedString(intro)
         self.questions = questions
-        self.acknowledgments = AttributedString(acknowledgments)
+        self.completionContent = completionContent
         self.skippable = skippable
     }
     
-    init(id: String, intro: AttributedString, questions: [Question], acknowledgments: AttributedString, skippable: Bool = false) {
+    init(id: String, intro: AttributedString, questions: [Question], completionContent: SurveyCompletionContent, skippable: Bool = false) {
         self.id = id
         self.intro = intro
         self.questions = questions
-        self.acknowledgments = acknowledgments
+        self.completionContent = completionContent
         self.skippable = skippable
     }
     
@@ -70,7 +70,7 @@ public struct Survey: Identifiable {
         )
         
         return Survey(id: UUID().uuidString, intro: markdownIntro,
-                      questions: questions.compactMap({ $0 }), acknowledgments: acknowledgments)
+                      questions: questions.compactMap({ $0 }), completionContent: SurveyCompletionContent.example)
     }
     
     public static func createSurvey(withId surveyId: String, questions: [Question],
@@ -80,10 +80,10 @@ public struct Survey: Identifiable {
               let markdownAcknowledgments: AttributedString = try? AttributedString(markdown: acknowledgments,
                   options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
         else {
-            return Survey(id: surveyId, intro: introPrompt, questions: questions, acknowledgments: acknowledgments, skippable: skippable)
+            return Survey(id: surveyId, intro: introPrompt, questions: questions, completionContent: SurveyCompletionContent.example, skippable: skippable)
         }
 
-        return Survey(id: surveyId, intro: attributedIntro, questions: questions, acknowledgments: markdownAcknowledgments, skippable: skippable)
+        return Survey(id: surveyId, intro: attributedIntro, questions: questions, completionContent: SurveyCompletionContent.example, skippable: skippable)
     }
     
 }
@@ -141,4 +141,40 @@ public struct QuestionOption: Identifiable {
         self.description = description
         self.allowsText = allowsText
     }
+}
+
+//MARK: Survey completion
+struct SurveyCompletionContent {
+    public let title: AttributedString
+    let description: AttributedString
+    let imageName: String?
+    let buttonTitle: String
+    
+    public init(attributedTitle: AttributedString, attributedDescription: AttributedString,
+                imageName: String?, buttonTitle: String) throws {
+        guard attributedTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard attributedDescription.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard buttonTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        
+        self.title = attributedTitle
+        self.description = attributedDescription
+        self.imageName = imageName
+        self.buttonTitle = buttonTitle
+    }
+    
+    public init(title: String, description: String, imageName: String?, buttonTitle: String) throws {
+        guard title.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard description.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard buttonTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        
+        guard let markdownTitle = try? AttributedString(markdown: title, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)) else { throw SurveyDefinitionError.emptyDescription }
+        guard let markdownDescription = try? AttributedString(markdown: description, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)) else { throw SurveyDefinitionError.emptyDescription }
+        
+        self.title = markdownTitle
+        self.description = markdownDescription
+        self.imageName = imageName
+        self.buttonTitle = buttonTitle
+    }
+    
+    static let example = try! SurveyCompletionContent(title: "Survey completed", description: "Thank you for participating", imageName: nil, buttonTitle: "Done")
 }

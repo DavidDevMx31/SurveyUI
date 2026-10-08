@@ -8,33 +8,50 @@
 import SwiftUI
 
 struct SurveyCompletedView: View {
-    let acknowledgments: AttributedString
+    let completionContent: SurveyCompletionContent
     var onFinishTapped: () -> Void
     
-    init(acknowledgments: AttributedString, _ completion: @escaping () -> Void) {
-        self.acknowledgments = acknowledgments
+    init(content: SurveyCompletionContent, _ completion: @escaping () -> Void) {
+        self.completionContent = content
         self.onFinishTapped = completion
     }
     
     var body: some View {
-        Group {
-            Text(acknowledgments)
+        VStack(alignment: .center, spacing: 24) {
+            Text(completionContent.title)
                 .font(SurveyUIThemeManager.shared.surveyIntroFont)
-                .multilineTextAlignment(.center)
-                .lineLimit(nil)
-                .transition(.slide)
             
+            if completionContent.imageName != nil {
+                Image(completionContent.imageName!)
+                    .resizable()
+                    .scaledToFit()
+            }
+            
+            Text(completionContent.description)
+                .font(SurveyUIThemeManager.shared.bodyFont)
+            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+        .transition(.slide)
+        .safeAreaInset(edge: .bottom) {
             Button {
                 onFinishTapped()
             } label: {
-                Label("Finalizar encuesta", systemImage: "checkmark.circle")
-                    .foregroundColor(Color.blue)
+                Label(completionContent.buttonTitle, systemImage: "checkmark.circle")
+                    .foregroundColor(Color.white)
+                    .padding(.horizontal)
             }
+            .tint(Color.blue)
+            .buttonStyle(.borderedProminent)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 #Preview {
-    SurveyCompletedView(acknowledgments: "Ejemplo") { debugPrint("Completed survey tapped") }
+    SurveyCompletedView(
+        content: SurveyCompletionContent.example) {
+        debugPrint("Tapped CTA button")
+    }
 }
