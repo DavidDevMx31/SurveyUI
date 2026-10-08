@@ -34,11 +34,27 @@ enum QuestionValidationState {
 //MARK: Validation error
 enum QuestionValidationError: LocalizedError {
     case selectionLimitExceeded(maximum: Int)
+    /*
+     To-do 001: handle errors form questions in this enum, discard old SurveyError
+     //case textIsEmpty
+     //case noCommentsAllowed
+     //case noSelection
+     */
+    
 
     var errorDescription: String? {
         switch self {
         case let .selectionLimitExceeded(maximum):
             return "Selecciona máximo \(maximum) elementos"
+            /*
+        To-do 001
+        case .textIsEmpty:
+            return "El texto de comentarios es requerido"
+        case .noCommentsAllowed:
+            return "Esta opción no permite agregar comentarios"
+        case .noSelection:
+            return "Seleccionar una opción es requerido"
+             */
         }
     }
 }
