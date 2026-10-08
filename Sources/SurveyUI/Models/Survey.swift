@@ -7,7 +7,7 @@
 
 import Foundation
 
-//MARK: Survey
+//MARK: Survey model
 public struct Survey: Identifiable {
     public var id: String
     var intro: AttributedString
@@ -79,7 +79,7 @@ public struct Survey: Identifiable {
     
 }
 
-//MARK: Survey questions
+//MARK: Survey question model
 public struct Question: Identifiable {
     public let id: String
     let prompt: String
@@ -133,7 +133,7 @@ public struct Question: Identifiable {
     }
 }
 
-//MARK: Question options
+//MARK: Question option model
 public struct QuestionOption: Identifiable {
     public let id: String
     let description: String
@@ -148,7 +148,7 @@ public struct QuestionOption: Identifiable {
     }
 }
 
-//MARK: Survey completion
+//MARK: Survey completion model
 public struct SurveyCompletionContent: Sendable {
     public let title: AttributedString
     let description: AttributedString
