@@ -16,6 +16,6 @@ extension String {
 
 extension AttributedString {
     func validateRequired() -> Bool {
-        String(self.characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !String(self.characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
