@@ -15,15 +15,24 @@ public struct Survey: Identifiable {
     var completionContent: SurveyCompletionContent
     let skippable: Bool
     
-    init(id: String, intro: String, questions: [Question], completionContent: SurveyCompletionContent, skippable: Bool = false) {
+    public init(id: String, intro: String, questions: [Question],
+                completionContent: SurveyCompletionContent, skippable: Bool = false) throws {
+        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
+        
+        guard let markdownIntro = try? AttributedString(markdown: intro, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)) else { throw SurveyDefinitionError.emptyDescription }
+        
         self.id = id
-        self.intro = AttributedString(intro)
+        self.intro = markdownIntro
         self.questions = questions
         self.completionContent = completionContent
         self.skippable = skippable
     }
     
-    init(id: String, intro: AttributedString, questions: [Question], completionContent: SurveyCompletionContent, skippable: Bool = false) {
+    public init(id: String, intro: AttributedString, questions: [Question],
+                completionContent: SurveyCompletionContent, skippable: Bool = false) throws {
+        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
+        guard intro.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        
         self.id = id
         self.intro = intro
         self.questions = questions
@@ -64,26 +73,8 @@ public struct Survey: Identifiable {
             , options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
         )
         
-        let acknowledgments: AttributedString = try! AttributedString(
-            markdown: "**¡Has terminado la encuesta!**\n\nPuedes usar este espacio para darle un mensaje final a tus usuarios."
-            , options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
-        )
-        
-        return Survey(id: UUID().uuidString, intro: markdownIntro,
-                      questions: questions.compactMap({ $0 }), completionContent: SurveyCompletionContent.example)
-    }
-    
-    public static func createSurvey(withId surveyId: String, questions: [Question],
-                                    introPrompt: String = "", acknowledgments: String = "", skippable: Bool = false) -> Survey {
-        guard let attributedIntro = try? AttributedString(markdown: introPrompt,
-            options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)),
-              let markdownAcknowledgments: AttributedString = try? AttributedString(markdown: acknowledgments,
-                  options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace))
-        else {
-            return Survey(id: surveyId, intro: introPrompt, questions: questions, completionContent: SurveyCompletionContent.example, skippable: skippable)
-        }
-
-        return Survey(id: surveyId, intro: attributedIntro, questions: questions, completionContent: SurveyCompletionContent.example, skippable: skippable)
+        return try! Survey(id: UUID().uuidString, intro: markdownIntro,
+                           questions: questions as! [Question], completionContent: SurveyCompletionContent.example)
     }
     
 }
@@ -104,9 +95,11 @@ public struct Question: Identifiable {
                 .singleChoice(options: let associatedOptions):
             
             guard Question.validateOnlyOneOptionAllowsText(associatedOptions) else { throw SurveyDefinitionError.manyOptionsAllowText }
+            guard Question.validateUniqueOptionIds(associatedOptions) else { throw SurveyDefinitionError.invalidMaximumSelection }
             self.options = associatedOptions
         case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
             if maxSelectableItems > options.count { throw SurveyDefinitionError.invalidMaximumSelection }
+            guard Question.validateUniqueCategoryIds(options) else { throw SurveyDefinitionError.invalidMaximumSelection }
             self.options = []
         default:
             self.options = []
@@ -120,6 +113,18 @@ public struct Question: Identifiable {
     private static func validateOnlyOneOptionAllowsText(_ options: [QuestionOption]) -> Bool {
         let allowsTextOptions = options.filter { $0.allowsText == true }
         if allowsTextOptions.count > 1 { return false }
+        return true
+    }
+    
+    private static func validateUniqueOptionIds(_ options: [QuestionOption]) -> Bool {
+        let ids = Set(options.map(\.id))
+        if options.count != ids.count { return false }
+        return true
+    }
+    
+    private static func validateUniqueCategoryIds(_ options: [CategoryOption]) -> Bool {
+        let ids = Set(options.map(\.id))
+        if options.count != ids.count { return false }
         return true
     }
     
@@ -144,7 +149,7 @@ public struct QuestionOption: Identifiable {
 }
 
 //MARK: Survey completion
-struct SurveyCompletionContent {
+public struct SurveyCompletionContent: Sendable {
     public let title: AttributedString
     let description: AttributedString
     let imageName: String?
@@ -176,5 +181,5 @@ struct SurveyCompletionContent {
         self.buttonTitle = buttonTitle
     }
     
-    static let example = try! SurveyCompletionContent(title: "Survey completed", description: "Thank you for participating", imageName: nil, buttonTitle: "Done")
+    public static let example = try! SurveyCompletionContent(title: "Survey completed", description: "Thank you for participating", imageName: nil, buttonTitle: "Done")
 }
