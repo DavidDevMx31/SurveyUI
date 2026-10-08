@@ -13,3 +13,9 @@ extension String {
         return true
     }
 }
+
+extension AttributedString {
+    func validateRequired() -> Bool {
+        String(self.characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+}
