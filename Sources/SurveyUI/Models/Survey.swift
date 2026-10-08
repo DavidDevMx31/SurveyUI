@@ -46,10 +46,17 @@ public struct Survey: Identifiable {
             try! QuestionOption(id: "8", description: "Otro", allowsText: true)
         ]
         
+        let categoryQuestionOptions = [
+            try! CategoryOption(id: "co-1", description: "Opción 1", emoji: "🕹️"),
+            try! CategoryOption(id: "co-2", description: "Opción 2", emoji: "⏰"),
+            try! CategoryOption(id: "co-3", description: "Opción 3", emoji: "⚔️"),
+        ]
+        
         let questions = [Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
                                   type: .singleChoice(options: questionOneOptions)),
                          Question(id: "2", prompt: "Este es el texto de la pregunta 2",
-                                  type: .singleChoice(options: questionTwoOptions))
+                                  type: .singleChoice(options: questionTwoOptions)),
+                         Question(id: "quest-3", prompt: "Esta es una pregunta con múltiples categorías para elegir", type: .categorySelection(options: categoryQuestionOptions, maxSelectableItems: 2))
         ]
         
         let markdownIntro: AttributedString = try! AttributedString(
