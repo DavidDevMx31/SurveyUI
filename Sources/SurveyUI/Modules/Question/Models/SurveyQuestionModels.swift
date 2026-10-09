@@ -14,7 +14,7 @@ public struct Question: Identifiable {
     let options: [QuestionOption]
     var type: QuestionType
     
-    init?(id: String, prompt: String, type: QuestionType) throws {
+    public init(id: String, prompt: String, type: QuestionType) throws {
         guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
         guard prompt.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         
