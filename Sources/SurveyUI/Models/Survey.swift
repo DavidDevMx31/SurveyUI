@@ -15,23 +15,9 @@ public struct Survey: Identifiable {
     var completionContent: SurveyCompletionContent
     let skippable: Bool
     
-    public init(id: String, intro: String, questions: [Question],
-                completionContent: SurveyCompletionContent, skippable: Bool = false) throws {
-        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
-        
-        guard let markdownIntro = try? AttributedString(markdown: intro, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)) else { throw SurveyDefinitionError.emptyDescription }
-        
-        self.id = id
-        self.intro = markdownIntro
-        self.questions = questions
-        self.completionContent = completionContent
-        self.skippable = skippable
-    }
-    
     public init(id: String, intro: AttributedString, questions: [Question],
                 completionContent: SurveyCompletionContent, skippable: Bool = false) throws {
         guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
-        guard intro.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         
         self.id = id
         self.intro = intro
@@ -39,6 +25,20 @@ public struct Survey: Identifiable {
         self.completionContent = completionContent
         self.skippable = skippable
     }
+    
+    public init(id: String, markdownIntro intro: String, questions: [Question],
+                completionContent: SurveyCompletionContent, skippable: Bool = false) throws {
+        guard id.validateRequired() else { throw SurveyDefinitionError.emptyId }
+        
+        guard let attributedIntro = try? AttributedString(markdown: intro, options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)) else { throw SurveyDefinitionError.emptyDescription }
+        
+        self.id = id
+        self.intro = attributedIntro
+        self.questions = questions
+        self.completionContent = completionContent
+        self.skippable = skippable
+    }
+    
     
     public static func getSurveyExample() -> Survey {
         let questionOneOptions = [
@@ -74,7 +74,7 @@ public struct Survey: Identifiable {
         )
         
         return try! Survey(id: UUID().uuidString, intro: markdownIntro,
-                           questions: questions as! [Question], completionContent: SurveyCompletionContent.example)
+                           questions: questions, completionContent: SurveyCompletionContent.example)
     }
     
 }
@@ -86,19 +86,20 @@ public struct SurveyCompletionContent: Sendable {
     let imageName: String?
     let buttonTitle: String
     
-    public init(attributedTitle: AttributedString, attributedDescription: AttributedString,
+    public init(title: AttributedString, description: AttributedString,
                 imageName: String?, buttonTitle: String) throws {
-        guard attributedTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
-        guard attributedDescription.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard title.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
+        guard description.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         guard buttonTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         
-        self.title = attributedTitle
-        self.description = attributedDescription
+        self.title = title
+        self.description = description
         self.imageName = imageName
         self.buttonTitle = buttonTitle
     }
     
-    public init(title: String, description: String, imageName: String?, buttonTitle: String) throws {
+    public init(markdownTitle title: String, markdownDescription description: String,
+                imageName: String?, buttonTitle: String) throws {
         guard title.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         guard description.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
         guard buttonTitle.validateRequired() else { throw SurveyDefinitionError.emptyDescription }
