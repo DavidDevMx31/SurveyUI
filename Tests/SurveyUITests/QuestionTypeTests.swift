@@ -32,6 +32,18 @@ final class QuestionTypeTests: XCTestCase {
         XCTAssertEqual(question.id, "question")
     }
 
+    func testSingleChoiceAcceptsOneRegularOption() throws {
+        let options = [try QuestionOption(id: "only", description: "Only option")]
+
+        let question = try XCTUnwrap(try Question(
+            id: "question",
+            prompt: "Choose one",
+            type: .singleChoice(options: options)
+        ))
+
+        XCTAssertEqual(question.id, "question")
+    }
+
     func testSingleChoiceRejectsEmptyOptions() throws {
         XCTAssertThrowsError(try Question(
             id: "question",
