@@ -45,15 +45,15 @@ enum QuestionValidationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .selectionLimitExceeded(maximum):
-            return "Selecciona máximo \(maximum) elementos"
+            return "Select no more than \(maximum) items"
             /*
         To-do 001
         case .textIsEmpty:
-            return "El texto de comentarios es requerido"
+            return "A comment is required"
         case .noCommentsAllowed:
-            return "Esta opción no permite agregar comentarios"
+            return "This option does not allow comments"
         case .noSelection:
-            return "Seleccionar una opción es requerido"
+            return "An option must be selected"
              */
         }
     }

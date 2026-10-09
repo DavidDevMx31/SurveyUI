@@ -26,33 +26,33 @@ extension SurveyError {
     var failureReason: String? {
         switch self {
         case .textIsEmpty:
-            return "El texto de comentarios está vacío"
+            return "The comment is empty"
         case .noSelection:
-            return "No has seleccionado ninguna opción"
+            return "No option is selected"
         case .noCommentsAllowed:
-            return "La opción no permite agregar comentarios"
+            return "This option does not allow comments"
         }
     }
     
     var errorDescription: String? {
         switch self {
         case .textIsEmpty:
-            return "El texto de comentarios es requerido"
+            return "A comment is required"
         case .noSelection:
-            return "Seleccionar una opción es requerido"
+            return "An option must be selected"
         case .noCommentsAllowed:
-            return "Esta opción no permite agregar comentarios"
+            return "Comments are not allowed for this option"
         }
     }
     
     var recoverySuggestion: String? {
         switch self {
         case .textIsEmpty:
-            return "Agrega tus comentarios"
+            return "Add a comment"
         case .noSelection:
-            return "Selecciona una opción"
+            return "Select an option"
         case .noCommentsAllowed:
-            return "Elimina los comentarios relacionados a esta opción"
+            return "Remove the comment for this option"
         }
     }
 }

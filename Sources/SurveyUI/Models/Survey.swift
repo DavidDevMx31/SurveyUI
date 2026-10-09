@@ -42,34 +42,34 @@ public struct Survey: Identifiable {
     
     public static func getSurveyExample() -> Survey {
         let questionOneOptions = [
-            try! QuestionOption(id: "1", description: "Opción 1"),
-            try! QuestionOption(id: "2", description: "Opción 2"),
-            try! QuestionOption(id: "3", description: "Opción 3"),
-            try! QuestionOption(id: "4", description: "Opción 4")
+            try! QuestionOption(id: "1", description: "Option 1"),
+            try! QuestionOption(id: "2", description: "Option 2"),
+            try! QuestionOption(id: "3", description: "Option 3"),
+            try! QuestionOption(id: "4", description: "Option 4")
         ]
         
         let questionTwoOptions = [
-            try! QuestionOption(id: "5", description: "Opción 5"),
-            try! QuestionOption(id: "6", description: "Opción 6"),
-            try! QuestionOption(id: "7", description: "Opción 7"),
-            try! QuestionOption(id: "8", description: "Otro", allowsText: true)
+            try! QuestionOption(id: "5", description: "Option 5"),
+            try! QuestionOption(id: "6", description: "Option 6"),
+            try! QuestionOption(id: "7", description: "Option 7"),
+            try! QuestionOption(id: "8", description: "Other", allowsText: true)
         ]
         
         let categoryQuestionOptions = [
-            try! CategoryOption(id: "co-1", description: "Opción 1", emoji: "🕹️"),
-            try! CategoryOption(id: "co-2", description: "Opción 2", emoji: "⏰"),
-            try! CategoryOption(id: "co-3", description: "Opción 3", emoji: "⚔️"),
+            try! CategoryOption(id: "co-1", description: "Option 1", emoji: "🕹️"),
+            try! CategoryOption(id: "co-2", description: "Option 2", emoji: "⏰"),
+            try! CategoryOption(id: "co-3", description: "Option 3", emoji: "⚔️"),
         ]
         
-        let questions = [try! Question(id: "1", prompt: "Aquí va el texto de la pregunta 1",
+        let questions = [try! Question(id: "1", prompt: "This is the text for question 1",
                                   type: .singleChoice(options: questionOneOptions)),
-                         try! Question(id: "2", prompt: "Este es el texto de la pregunta 2",
+                         try! Question(id: "2", prompt: "This is the text for question 2",
                                   type: .singleChoice(options: questionTwoOptions)),
-                         try! Question(id: "quest-3", prompt: "Esta es una pregunta con múltiples categorías para elegir", type: .categorySelection(options: categoryQuestionOptions, maxSelectableItems: 2))
+                         try! Question(id: "quest-3", prompt: "Choose from multiple categories", type: .categorySelection(options: categoryQuestionOptions, maxSelectableItems: 2))
         ]
         
         let markdownIntro: AttributedString = try! AttributedString(
-            markdown: "**Esta es la introducción**\n\nPuedes usar texto normal o con atributos."
+            markdown: "**This is the introduction**\n\nYou can use plain text or formatted text."
             , options: AttributedString.MarkdownParsingOptions(interpretedSyntax: .inlineOnlyPreservingWhitespace)
         )
         
