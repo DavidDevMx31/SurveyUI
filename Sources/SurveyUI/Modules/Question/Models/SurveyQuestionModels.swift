@@ -22,10 +22,12 @@ public struct Question: Identifiable {
         case .multipleChoice(let associatedOptions),
                 .singleChoice(options: let associatedOptions):
             
+            guard !associatedOptions.isEmpty else { throw SurveyDefinitionError.emptyOptions }
             guard Question.validateOnlyOneOptionAllowsText(associatedOptions) else { throw SurveyDefinitionError.manyOptionsAllowText }
             guard Question.validateUniqueOptionIds(associatedOptions) else { throw SurveyDefinitionError.nonUniqueIds }
             self.options = associatedOptions
         case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
+            guard !options.isEmpty else { throw SurveyDefinitionError.emptyOptions }
             if maxSelectableItems > options.count { throw SurveyDefinitionError.invalidMaximumSelection }
             guard Question.validateUniqueCategoryIds(options) else { throw SurveyDefinitionError.nonUniqueIds }
             self.options = []

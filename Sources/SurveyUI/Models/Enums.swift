@@ -61,6 +61,7 @@ extension SurveyError {
 public enum SurveyDefinitionError: LocalizedError {
     case emptyId
     case emptyDescription
+    case emptyOptions
     case manyOptionsAllowText
     case invalidMaximumSelection
     case nonUniqueIds
