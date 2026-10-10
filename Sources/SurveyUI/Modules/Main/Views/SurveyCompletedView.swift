@@ -17,7 +17,7 @@ struct SurveyCompletedView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 24) {
+        VStack(alignment: .center, spacing: 48) {
             Text(completionContent.title)
                 .font(SurveyUIThemeManager.shared.surveyIntroFont)
             
@@ -32,6 +32,7 @@ struct SurveyCompletedView: View {
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
         .multilineTextAlignment(.center)
         .lineLimit(nil)
         .transition(.slide)
