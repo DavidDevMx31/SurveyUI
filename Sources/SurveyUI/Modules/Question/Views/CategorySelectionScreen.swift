@@ -16,7 +16,7 @@ struct CategorySelectionScreen: View {
     let columns = [GridItem(.adaptive(minimum: 160))]
     
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .leading) {
+        LazyVGrid(columns: columns, alignment: .center) {
             ForEach(options) { option in
                 rowForOption(option)
             }
