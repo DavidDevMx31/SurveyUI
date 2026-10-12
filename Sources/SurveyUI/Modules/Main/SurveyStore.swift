@@ -19,14 +19,16 @@ class SurveyStore: ObservableObject {
     var currentQuestion: Question {
         survey.questions[currentQuestionIndex]
     }
-    var selectionStrategy: MultipleOptionQuestionStrategy? {
+    var selectionStrategy: SurveyQuestionStrategy? {
         switch currentQuestion.type {
-        case .singleSelection(_):
+        case .singleChoice(_):
             return SingleSelectionStrategy(currentQuestion: currentQuestion)
-        case .multipleSelection(_):
+        case .multipleChoice(_):
             return MultipleSelectionStrategy(currentQuestion: currentQuestion)
         case .open(_):
             return nil
+        case .categorySelection(options: _, maxSelectableItems: let maxSelectableItems):
+            return CategorySelectionStrategy(currentQuestion: currentQuestion, maxSelectableItems: maxSelectableItems)
         }
     }
     private(set) var responses: [String:QuestionResult] = [:]
@@ -38,6 +40,11 @@ class SurveyStore: ObservableObject {
                 self.errorDetails = nil
             }
         )
+    }
+    
+    @MainActor
+    var currentValidationState: QuestionValidationState {
+        selectionStrategy?.validate(for: currentResponse) ?? .incomplete
     }
     
     //MARK: Initializer
@@ -56,12 +63,10 @@ class SurveyStore: ObservableObject {
         currentResponse = responses[currentQuestion.id] ?? QuestionResult(questionId: currentQuestion.id)
     }
     
+    @MainActor
     func nextQuestion() {
-        if let error = validateCurrentResponse() {
-            errorDetails = error
-            return
-        }
-        
+        guard currentValidationState.canAdvance else { return }
+
         guard currentQuestionIndex < survey.questions.count - 1 else {
             surveyCompleted = true
             return
@@ -98,7 +103,7 @@ class SurveyStore: ObservableObject {
 extension SurveyStore: MultipleOptionQuestionProtocol {
     func selectOption(_ id: String) {
         guard let strategy = selectionStrategy else { return }
-        let newResponse = strategy.selectId(id , currentResult: currentResponse)
+        let newResponse = strategy.selectOption(id , currentResult: currentResponse)
         responses[currentQuestion.id] = newResponse
         currentResponse = newResponse
     }

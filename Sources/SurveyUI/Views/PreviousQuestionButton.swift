@@ -11,6 +11,11 @@ struct PreviousQuestionButton: View {
     @Environment(\.isEnabled) var isEnabled
     var onTappedCompletion: (() -> Void)
     
+    private var buttonOpacity: CGFloat {
+        if isEnabled { return 0.8 }
+        return 0.6
+    }
+    
     init(_ onTappedCompletion: @escaping () -> Void) {
         self.onTappedCompletion = onTappedCompletion
     }
@@ -20,8 +25,11 @@ struct PreviousQuestionButton: View {
             onTappedCompletion()
         } label: {
             Label("Anterior", systemImage: "arrow.left.circle")
-                .foregroundColor(isEnabled ? Color.blue : Color(uiColor: UIColor.systemGray5))
+                .foregroundColor(isEnabled ? Color.black.opacity(buttonOpacity) : Color.black.opacity(buttonOpacity))
         }
+        .tint(Color(uiColor: UIColor.systemGray3))
+        .buttonStyle(.borderedProminent)
+         
     }
 }
 

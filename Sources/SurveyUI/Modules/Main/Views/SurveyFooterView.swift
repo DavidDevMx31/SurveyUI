@@ -11,40 +11,44 @@ struct SurveyFooterView: View {
     @ObservedObject var store: SurveyStore
     
     private var disableNextButton: Bool {
-        guard let selectedOptions = store.currentResponse.selectedOptionsId,
-              !selectedOptions.isEmpty else {
-            return true
-        }
-
-        if let allowsTextOption = store.currentQuestion.allowTextOption {
-            if selectedOptions.contains(allowsTextOption.id) {
-                guard let comment = store.currentResponse.comments,
-                      !comment.isEmpty else {
-                    return true
-                }
-            } //else { return true }
-        }
-        
-        return false
+        !store.currentValidationState.canAdvance
+    }
+    
+    let canSkip: Bool
+    var onSkipTapped: (() -> Void)
+    
+    init(store: SurveyStore, canSkip: Bool, onSkipTapped: @escaping (() -> Void)) {
+        self.store = store
+        self.canSkip = canSkip
+        self.onSkipTapped = onSkipTapped
     }
     
     var body: some View {
-        HStack(alignment: .center, spacing: 96) {
-            PreviousQuestionButton {
-                store.previousQuestion()
+        VStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .center, spacing: 96) {
+                PreviousQuestionButton {
+                    store.previousQuestion()
+                }
+                .disabled(store.currentQuestionIndex == 0)
+                
+                NextQuestionButton {
+                    store.nextQuestion()
+                }
+                .disabled(disableNextButton)
             }
-            .disabled(store.currentQuestionIndex == 0)
             
-            NextQuestionButton {
-                store.nextQuestion()
+            if canSkip {
+                SkipSurveyButton {
+                    onSkipTapped()
+                }
             }
-            .disabled(disableNextButton)
-            
         }
         .padding(.vertical, 16)
     }
 }
 
 #Preview {
-    SurveyFooterView(store: .init(survey: Survey.getSurveyExample()))
+    SurveyFooterView(store: .init(survey: Survey.getSurveyExample()), canSkip: false) {
+        debugPrint("Skip button tapped")
+    }
 }
