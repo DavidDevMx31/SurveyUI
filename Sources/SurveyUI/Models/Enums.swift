@@ -9,37 +9,10 @@ import Foundation
 
 //MARK: Question types
 public enum QuestionType {
-    case singleSelection(options: [QuestionOption])
-    case multipleSelection(options: [QuestionOption])
+    case singleChoice(options: [QuestionOption])
+    case multipleChoice(options: [QuestionOption])
     case open(placeholder: String)
-}
-
-//MARK: Question errors
-public enum QuestionError: LocalizedError {
-    case tooManyOptionsAllowText
-}
-
-extension QuestionError {
-    public var failureReason: String? {
-        switch self {
-        case .tooManyOptionsAllowText:
-            return "Hay dos o más opciones que pueden recibir comentarios"
-        }
-    }
-    
-    public var errorDescription: String? {
-        switch self {
-        case .tooManyOptionsAllowText:
-            return "Se asignaron dos o más preguntas que pueden recibir comentarios"
-        }
-    }
-    
-    public var recoverySuggestion: String? {
-        switch self {
-        case .tooManyOptionsAllowText:
-            return "Ingrese máximo una pregunta que pueda recibir comentarios"
-        }
-    }
+    case categorySelection(options: [CategoryOption], maxSelectableItems: Int)
 }
 
 //MARK: Survey errors
@@ -53,34 +26,43 @@ extension SurveyError {
     var failureReason: String? {
         switch self {
         case .textIsEmpty:
-            return "El texto de comentarios está vacío"
+            return "The comment is empty"
         case .noSelection:
-            return "No has seleccionado ninguna opción"
+            return "No option is selected"
         case .noCommentsAllowed:
-            return "La opción no permite agregar comentarios"
+            return "This option does not allow comments"
         }
     }
     
     var errorDescription: String? {
         switch self {
         case .textIsEmpty:
-            return "El texto de comentarios es requerido"
+            return "A comment is required"
         case .noSelection:
-            return "Seleccionar una opción es requerido"
+            return "An option must be selected"
         case .noCommentsAllowed:
-            return "Esta opción no permite agregar comentarios"
+            return "Comments are not allowed for this option"
         }
     }
     
     var recoverySuggestion: String? {
         switch self {
         case .textIsEmpty:
-            return "Agrega tus comentarios"
+            return "Add a comment"
         case .noSelection:
-            return "Selecciona una opción"
+            return "Select an option"
         case .noCommentsAllowed:
-            return "Elimina los comentarios relacionados a esta opción"
+            return "Remove the comment for this option"
         }
     }
 }
 
+//MARK: Survey definition errors
+public enum SurveyDefinitionError: LocalizedError {
+    case emptyId
+    case emptyDescription
+    case emptyOptions
+    case manyOptionsAllowText
+    case invalidMaximumSelection
+    case nonUniqueIds
+}

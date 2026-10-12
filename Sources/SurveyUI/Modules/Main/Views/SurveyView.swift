@@ -8,19 +8,22 @@
 import SwiftUI
 
 public struct SurveyView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var store: SurveyStore
     private var onCompletedSurvey: (SurveyResult) -> Void
+    private let canSkip: Bool
     
     public init(survey: Survey,
                 onCompleted: @escaping (SurveyResult)->Void) {
         self._store = StateObject(wrappedValue: SurveyStore(survey: survey))
         self.onCompletedSurvey = onCompleted
+        self.canSkip = survey.skippable
     }
     
     public var body: some View {
         VStack(alignment: .center, spacing: 24) {
             if store.surveyCompleted {
-                SurveyCompletedView(acknowledgments: store.survey.acknowledgments) {
+                SurveyCompletedView(content: store.survey.completionContent) {
                     let results = store.getSurveyResults()
                     onCompletedSurvey(results)
                 }
@@ -39,7 +42,9 @@ public struct SurveyView: View {
                         Text(error.recoverySuggestion ?? "")
                     })
                 
-                SurveyFooterView(store: store)
+                SurveyFooterView(store: store, canSkip: canSkip) {
+                    dismiss()
+                }
             }
         }
         .padding(.horizontal, 12)

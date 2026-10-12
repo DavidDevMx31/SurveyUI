@@ -7,7 +7,7 @@
 
 import Foundation
 
-//MARK: Question result
+//MARK: Survey result model
 public struct SurveyResult {
     public let surveyId: String
     public var answers: [QuestionResult]
@@ -18,6 +18,7 @@ public struct SurveyResult {
     }
 }
 
+//MARK: Question result model
 public struct QuestionResult {
     public let questionId: String
     public var selectedOptionsId: [String]?

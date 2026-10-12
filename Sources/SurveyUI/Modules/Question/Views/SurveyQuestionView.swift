@@ -21,10 +21,12 @@ struct SurveyQuestionView: View {
                 .animation(.linear, value: store.currentQuestionIndex)
             
             switch store.currentQuestion.type {
-            case .singleSelection(options: _), .multipleSelection(options: _):
+            case .singleChoice(options: _), .multipleChoice(options: _):
                 MultipleOptionQuestionView(store: store)
             case .open(placeholder: _):
                 EmptyView()
+            case .categorySelection(options: let options, maxSelectableItems: let maxSelectableItems):
+                CategorySelectionScreen(store: store, options: options, maxSelectableItems: maxSelectableItems)
             }
         }
         .animation(.default, value: store.currentQuestionIndex)
