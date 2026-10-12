@@ -47,7 +47,7 @@ struct MultipleSelectionStrategy: SurveyQuestionStrategy {
     }
     
     func validate(for response: QuestionResult) -> QuestionValidationState {
-        guard let selectedOptions = response.selectedOptionsId else { return .incomplete }
+        guard response.selectedOptionsId != nil else { return .incomplete }
         if currentQuestion.allowTextOption != nil {
             if response.comments?.isEmpty == true { return .incomplete }
         }
