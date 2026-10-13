@@ -10,14 +10,15 @@ import SwiftUI
 public struct SurveyView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var store: SurveyStore
-    private var onCompletedSurvey: (SurveyResult) -> Void
-    private let canSkip: Bool
+    private let onCompletedSurvey: (SurveyResult) -> Void
+    private let onSkippedSurvey: (() -> Void)?
     
     public init(survey: Survey,
-                onCompleted: @escaping (SurveyResult)->Void) {
+                onCompleted: @escaping (SurveyResult)->Void,
+                onSkipped: (()->Void)? = nil) {
         self._store = StateObject(wrappedValue: SurveyStore(survey: survey))
         self.onCompletedSurvey = onCompleted
-        self.canSkip = survey.skippable
+        self.onSkippedSurvey = onSkipped
     }
     
     public var body: some View {
@@ -42,7 +43,8 @@ public struct SurveyView: View {
                         Text(error.recoverySuggestion ?? "")
                     })
                 
-                SurveyFooterView(store: store, canSkip: canSkip) {
+                SurveyFooterView(store: store) {
+                    onSkippedSurvey?()
                     dismiss()
                 }
             }

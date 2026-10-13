@@ -14,12 +14,10 @@ struct SurveyFooterView: View {
         !store.currentValidationState.canAdvance
     }
     
-    let canSkip: Bool
-    var onSkipTapped: (() -> Void)
+    var onSkipTapped: () -> Void
     
-    init(store: SurveyStore, canSkip: Bool, onSkipTapped: @escaping (() -> Void)) {
+    init(store: SurveyStore, onSkipTapped: @escaping () -> Void) {
         self.store = store
-        self.canSkip = canSkip
         self.onSkipTapped = onSkipTapped
     }
     
@@ -37,7 +35,7 @@ struct SurveyFooterView: View {
                 .disabled(disableNextButton)
             }
             
-            if canSkip {
+            if store.survey.skippable {
                 SkipSurveyButton {
                     onSkipTapped()
                 }
@@ -48,7 +46,7 @@ struct SurveyFooterView: View {
 }
 
 #Preview {
-    SurveyFooterView(store: .init(survey: Survey.getSurveyExample()), canSkip: false) {
+    SurveyFooterView(store: .init(survey: Survey.getSurveyExample())) {
         debugPrint("Skip button tapped")
     }
 }
