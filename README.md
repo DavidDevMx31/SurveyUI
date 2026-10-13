@@ -120,7 +120,7 @@ Some model properties (including option labels, question prompts/types, survey i
 
 ## Results and callbacks
 
-`SurveyView(survey:onCompleted:)` calls `onCompleted` with a `SurveyResult` when the respondent taps the completion button. `SurveyResult.surveyId` identifies the survey and `SurveyResult.answers` contains `QuestionResult` values. Each result exposes its `questionId`, optional `selectedOptionsId` array, and optional `comments` string. Single-choice answers contain one selected option ID; multiple-choice and category answers can contain several. Answers that have no selection or comment have `nil` fields.
+`SurveyView(survey:onCompleted:onSkipped:)` calls `onCompleted` with a `SurveyResult` when the respondent taps the completion button. `onSkipped` is an optional callback (defaults to `nil`) called when the respondent taps Skip on a skippable survey; it runs before the survey view is dismissed. `SurveyResult.surveyId` identifies the survey and `SurveyResult.answers` contains `QuestionResult` values. Each result exposes its `questionId`, optional `selectedOptionsId` array, and optional `comments` string. Single-choice answers contain one selected option ID; multiple-choice and category answers can contain several. Answers that have no selection or comment have `nil` fields.
 
 The callback runs on completion, not when the respondent skips the survey.
 
