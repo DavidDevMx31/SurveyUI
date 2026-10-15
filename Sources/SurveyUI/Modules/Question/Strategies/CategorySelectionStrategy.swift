@@ -27,7 +27,7 @@ struct CategorySelectionStrategy: SurveyQuestionStrategy {
         } else {
             previousSelection.append(id)
         }
-        var result = QuestionResult(questionId: id)
+        var result = QuestionResult(questionId: currentQuestion.id)
         result.setResponse(selectedOptionsId: previousSelection, comments: nil)
         return result
     }
